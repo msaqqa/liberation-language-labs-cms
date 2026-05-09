@@ -5,6 +5,9 @@ export const Principles: GlobalConfig = {
   access: {
     read: () => true,
   },
+  admin: {
+    group: 'Pages',
+  },
   fields: [
     {
       name: 'banner',
@@ -47,48 +50,30 @@ export const Principles: GlobalConfig = {
           type: 'richText',
           required: true,
         },
+      ],
+    },
+    {
+      name: 'strive',
+      type: 'group',
+      fields: [
         {
-          name: 'striveToList',
+          name: 'title',
+          type: 'text',
+        },
+        {
+          name: 'list',
           type: 'array',
           fields: [
             {
               name: 'item',
               type: 'text',
+              required: true,
             },
           ],
         },
-      ],
-    },
-    {
-      name: 'values',
-      type: 'group',
-      fields: [
         {
           name: 'content',
           type: 'richText',
-          required: true,
-        },
-        {
-          name: 'quote',
-          type: 'group',
-          fields: [
-            {
-              name: 'text',
-              type: 'textarea',
-            },
-            {
-              name: 'author',
-              type: 'text',
-            },
-            {
-              name: 'bookTitle',
-              type: 'text',
-            },
-            {
-              name: 'bookLink',
-              type: 'text',
-            },
-          ],
         },
       ],
     },

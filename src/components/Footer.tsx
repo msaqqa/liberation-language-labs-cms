@@ -1,21 +1,23 @@
-import React from "react";
-import Link from "next/link";
+import React from 'react'
+import Link from 'next/link'
+import { getMedia } from '@/lib/media'
 
 interface FooterProps {
-  logoUrl: string;
-  navLinks: { label: string; link: string }[];
-  copyright: string;
-  designerText?: string;
-  designerLink?: string;
+  logo: string
+  navLinks: { label: string; link: string }[]
+  copyright: string
+  designerText?: string
+  designerLink?: string
 }
 
 const Footer: React.FC<FooterProps> = ({
-  logoUrl,
+  logo,
   navLinks,
   copyright,
   designerText,
   designerLink,
 }) => {
+  const getLogo = getMedia(logo)
   return (
     <footer className="site_footer bg_primary">
       <div className="container">
@@ -25,10 +27,11 @@ const Footer: React.FC<FooterProps> = ({
               <div className="site_logo">
                 <Link className="site_link" href="/">
                   <img
-                    src={
-                      logoUrl || "/assets/images/site_logo/site_logo_white.webp"
+                    src={getLogo.url || '/assets/images/site_logo/site_logo_white.webp'}
+                    alt={
+                      getLogo.alt ||
+                      'Site Logo – Liberation Language Labs – Psychotherapist Site Template'
                     }
-                    alt="Site Logo – Liberation Language Labs – Psychotherapist Site Template"
                   />
                 </Link>
               </div>
@@ -55,14 +58,9 @@ const Footer: React.FC<FooterProps> = ({
           </p>
           {designerText && (
             <p className="copyright_text m-0">
-              {designerText}{" "}
               {designerLink && (
-                <a
-                  href={designerLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  TAQAT
+                <a href={designerLink} target="_blank" rel="noopener noreferrer">
+                  {designerText}
                 </a>
               )}
             </p>
@@ -70,7 +68,7 @@ const Footer: React.FC<FooterProps> = ({
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

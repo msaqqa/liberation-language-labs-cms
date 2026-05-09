@@ -9,7 +9,7 @@ interface NavLink {
 }
 
 interface HeaderProps {
-  logoUrl: { url: string; alt: string } | string | null
+  logo: { url: string; alt: string } | null
   hotline: {
     number: string
     link: string
@@ -17,8 +17,8 @@ interface HeaderProps {
   navLinks: NavLink[]
 }
 
-const Header: React.FC<HeaderProps> = ({ logoUrl, hotline, navLinks }) => {
-  const getLogo = getMedia(logoUrl)
+const Header: React.FC<HeaderProps> = ({ logo, hotline, navLinks }) => {
+  const getLogo = getMedia(logo)
   return (
     <header className="site_header">
       <div className="container">

@@ -5,6 +5,9 @@ export const Header: GlobalConfig = {
   access: {
     read: () => true,
   },
+  admin: {
+    group: 'Layout',
+  },
   fields: [
     {
       name: 'logo',

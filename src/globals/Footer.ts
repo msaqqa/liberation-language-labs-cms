@@ -1,45 +1,48 @@
-import { GlobalConfig } from "payload";
+import { GlobalConfig } from 'payload'
 
 export const Footer: GlobalConfig = {
-  slug: "footer",
+  slug: 'footer',
   access: {
     read: () => true,
   },
+  admin: {
+    group: 'Layout',
+  },
   fields: [
     {
-      name: "logo",
-      type: "upload",
-      relationTo: "media",
+      name: 'logo',
+      type: 'upload',
+      relationTo: 'media',
       required: true,
     },
     {
-      name: "navLinks",
-      type: "array",
+      name: 'navLinks',
+      type: 'array',
       fields: [
         {
-          name: "label",
-          type: "text",
+          name: 'label',
+          type: 'text',
           required: true,
         },
         {
-          name: "link",
-          type: "text",
+          name: 'link',
+          type: 'text',
           required: true,
         },
       ],
     },
     {
-      name: "copyright",
-      type: "text",
+      name: 'copyright',
+      type: 'text',
       required: true,
     },
     {
-      name: "designerText",
-      type: "text",
+      name: 'designerText',
+      type: 'text',
     },
     {
-      name: "designerLink",
-      type: "text",
+      name: 'designerLink',
+      type: 'text',
     },
   ],
-};
+}

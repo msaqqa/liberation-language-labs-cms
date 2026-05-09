@@ -497,15 +497,16 @@ export interface PrinciplesPage {
       };
       [k: string]: unknown;
     };
-    striveToList?:
+  };
+  strive?: {
+    title?: string | null;
+    list?:
       | {
-          item?: string | null;
+          item: string;
           id?: string | null;
         }[]
       | null;
-  };
-  values: {
-    content: {
+    content?: {
       root: {
         type: string;
         children: {
@@ -519,13 +520,7 @@ export interface PrinciplesPage {
         version: number;
       };
       [k: string]: unknown;
-    };
-    quote?: {
-      text?: string | null;
-      author?: string | null;
-      bookTitle?: string | null;
-      bookLink?: string | null;
-    };
+    } | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -665,25 +660,18 @@ export interface PrinciplesPageSelect<T extends boolean = true> {
     | {
         title?: T;
         content?: T;
-        striveToList?:
+      };
+  strive?:
+    | T
+    | {
+        title?: T;
+        list?:
           | T
           | {
               item?: T;
               id?: T;
             };
-      };
-  values?:
-    | T
-    | {
         content?: T;
-        quote?:
-          | T
-          | {
-              text?: T;
-              author?: T;
-              bookTitle?: T;
-              bookLink?: T;
-            };
       };
   updatedAt?: T;
   createdAt?: T;

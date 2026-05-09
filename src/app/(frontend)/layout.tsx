@@ -5,7 +5,7 @@ import configPromise from '@payload-config'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import BootstrapJS from '@/components/BootstrapJS'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -57,13 +57,13 @@ export default async function RootLayout({
           </a>
         </div>
         <Header
-          logoUrl={headerData.logo}
+          logo={headerData.logo}
           hotline={headerData.hotline as any}
           navLinks={(headerData.navLinks as any) || []}
         />
         <main className="page_content">{children}</main>
         <Footer
-          logoUrl={getUrl(footerData.logo)}
+          logo={getUrl(footerData.logo)}
           navLinks={(footerData.navLinks as any) || []}
           copyright={footerData.copyright}
           designerText={footerData.designerText}
