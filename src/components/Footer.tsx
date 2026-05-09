@@ -2,8 +2,13 @@ import React from 'react'
 import Link from 'next/link'
 import { getMedia } from '@/lib/media'
 
+export type Media = {
+  url: string
+  alt: string
+}
+
 interface FooterProps {
-  logo: string
+  logo: Media | number | null
   navLinks: { label: string; link: string }[]
   copyright: string
   designerText?: string

@@ -8,8 +8,13 @@ interface NavLink {
   link: string
 }
 
+export type Media = {
+  url: string
+  alt: string
+}
+
 interface HeaderProps {
-  logo: { url: string; alt: string } | null
+  logo: Media | number | null
   hotline: {
     number: string
     link: string
