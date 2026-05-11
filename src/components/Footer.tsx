@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { getMedia } from '@/lib/media'
 
 export type Media = {
-  url: string
-  alt: string
+  url?: string | null
+  alt?: string
 }
 
 interface FooterProps {

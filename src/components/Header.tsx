@@ -9,8 +9,8 @@ interface NavLink {
 }
 
 export type Media = {
-  url: string
-  alt: string
+  url?: string | null
+  alt?: string
 }
 
 interface HeaderProps {
