@@ -8,6 +8,7 @@ import { s3Storage } from '@payloadcms/storage-s3'
 // Collections
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Blogs } from './collections/Blogs'
 // Globals
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
@@ -31,7 +32,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Media],
+  collections: [Users, Media, Blogs],
   globals: [Header, Footer, Home, Principles],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

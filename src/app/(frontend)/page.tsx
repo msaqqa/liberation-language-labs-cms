@@ -1,45 +1,42 @@
-import { getPayload } from "payload";
-import configPromise from "@payload-config";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import SpeechTherapy from "@/components/SpeechTherapy";
-import Services from "@/components/Services";
-import Pricing from "@/components/Pricing";
-import Contact from "@/components/Contact";
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
+import Hero from '@/components/Hero'
+import About from '@/components/About'
+import SpeechTherapy from '@/components/SpeechTherapy'
+import Services from '@/components/Services'
+import Pricing from '@/components/Pricing'
+import Contact from '@/components/Contact'
+import { BlogSection } from '@/components/BlogSection'
 
 export default async function HomePage() {
-  const payload = await getPayload({ config: configPromise });
-  const homeData = await payload.findGlobal({
-    slug: "home-page",
-  });
+  const payload = await getPayload({ config: configPromise })
+  const homeData = (await payload.findGlobal({
+    slug: 'home-page',
+  })) as any
 
-  // Helper to get media URL
-  const getUrl = (media: any) => (typeof media === "object" ? media?.url : "");
+  const getUrl = (media: any) => (typeof media === 'object' ? media?.url : '')
 
   return (
     <main>
-      <Hero
-        title={homeData.hero.title}
-        backgroundImageUrl={getUrl(homeData.hero.backgroundImage)}
-      />
+      <Hero title={homeData.hero.title} backgroundImage={homeData.hero.backgroundImage} />
 
       <About
         title={homeData.about.title}
         subtitle={homeData.about.subtitle}
-        description={homeData.about.description} // Note: need a rich text renderer
+        description={homeData.about.description}
         imageUrl={getUrl(homeData.about.image)}
       />
 
       <SpeechTherapy
         title={homeData.speechTherapy.title}
         description={homeData.speechTherapy.description}
-        items={(homeData.speechTherapy.items as any) || []}
+        items={homeData.speechTherapy.items || []}
       />
 
       <Services
         title={homeData.services.title}
         description={homeData.services.description}
-        servicesLists={(homeData.services.servicesLists as any) || []}
+        servicesLists={homeData.services.servicesLists || []}
       />
 
       <Pricing
@@ -47,6 +44,8 @@ export default async function HomePage() {
         description={homeData.pricing.description}
         paymentInfo={homeData.pricing.paymentInfo}
       />
+
+      <BlogSection />
 
       <Contact
         title={homeData.contactInfo.title}
@@ -57,5 +56,5 @@ export default async function HomePage() {
         address={homeData.contactInfo.address}
       />
     </main>
-  );
+  )
 }
