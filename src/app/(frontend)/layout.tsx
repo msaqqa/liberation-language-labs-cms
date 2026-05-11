@@ -63,11 +63,11 @@ export default async function RootLayout({
         />
         <main className="page_content">{children}</main>
         <Footer
-          logo={getUrl(footerData.logo)}
+          logo={footerData.logo as any}
           navLinks={(footerData.navLinks as any) || []}
           copyright={footerData.copyright}
-          designerText={footerData.designerText}
-          designerLink={footerData.designerLink}
+          designerText={footerData.designerText as any}
+          designerLink={footerData.designerLink as any}
         />
         {/* <Script src="/assets/js/bootstrap.min.js" strategy="afterInteractive" />
         <Script src="/assets/js/main.min.js" strategy="afterInteractive" /> */}

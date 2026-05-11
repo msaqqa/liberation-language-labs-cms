@@ -1,6 +1,6 @@
 export type Media = {
-  url: string
-  alt: string
+  url?: string | null
+  alt?: string
 }
 export type MediaField = Media | number | null
 
