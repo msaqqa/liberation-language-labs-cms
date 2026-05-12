@@ -34,21 +34,25 @@ export default async function PrinciplesPage() {
                   </div>
                 )}
 
-                <h3 className="details_info_title">{data.strive.title}</h3>
-                <ul className="info_list unordered_list_block mb-4">
-                  {((data.strive.list as any) || []).map((item: any, index: number) => (
-                    <li key={index}>
-                      <span className="info_icon">
-                        <i className="fa-light fa-circle-check"></i>
-                      </span>
-                      <span className="info_text">{item.item}</span>
-                    </li>
-                  ))}
-                </ul>
-                {data.strive.content && typeof data.strive.content === 'object' && (
-                  <div className="section_heading_description">
-                    <RichText data={data.strive.content} />
-                  </div>
+                {data.strive && (
+                  <>
+                    <h3 className="details_info_title">{data.strive.title}</h3>
+                    <ul className="info_list unordered_list_block mb-4">
+                      {((data.strive.list as any) || []).map((item: any, index: number) => (
+                        <li key={index}>
+                          <span className="info_icon">
+                            <i className="fa-light fa-circle-check"></i>
+                          </span>
+                          <span className="info_text">{item.item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {data.strive.content && typeof data.strive.content === 'object' && (
+                      <div className="section_heading_description">
+                        <RichText data={data.strive.content} />
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
