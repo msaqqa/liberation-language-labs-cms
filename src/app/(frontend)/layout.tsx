@@ -10,6 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 const openSans = Open_Sans({
   subsets: ['latin'],
   variable: '--font-open-sans',
+  weight: ['300', '400', '500', '600', '700', '800'],
+  style: ['normal', 'italic'],
 })
 
 export const metadata: Metadata = {
@@ -42,8 +44,6 @@ export default async function RootLayout({
       suppressHydrationWarning={true}
     >
       <head>
-        {/* <!-- Bootstrap css --> */}
-        {/* <link rel="stylesheet" href="/assets/css/bootstrap.min.css" media="screen" /> */}
         {/* <!-- Font Awesome icon css--> */}
         <link rel="stylesheet" href="/assets/css/fontawesome.min.css" media="screen" />
         {/* <!-- Main style css --> */}

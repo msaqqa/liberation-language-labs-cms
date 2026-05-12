@@ -1,6 +1,7 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { getMedia } from '@/lib/media'
 
 interface NavLink {
@@ -22,10 +23,36 @@ interface HeaderProps {
   navLinks: NavLink[]
 }
 
+const normalizeNavHref = (href: string) => {
+  // Ensure section links from CMS always target sections on the home page.
+  if (href.startsWith('#')) {
+    return `/${href}`
+  }
+
+  return href
+}
+
 const Header: React.FC<HeaderProps> = ({ logo, hotline, navLinks }) => {
+  const [isSticky, setIsSticky] = useState(false)
   const getLogo = getMedia(logo)
+
+  useEffect(() => {
+    const syncStickyState = () => {
+      setIsSticky(window.scrollY > 0)
+    }
+
+    syncStickyState()
+    window.addEventListener('scroll', syncStickyState)
+    window.addEventListener('pageshow', syncStickyState)
+
+    return () => {
+      window.removeEventListener('scroll', syncStickyState)
+      window.removeEventListener('pageshow', syncStickyState)
+    }
+  }, [])
+
   return (
-    <header className="site_header">
+    <header className={`site_header${isSticky ? ' sticky' : ''}`}>
       <div className="container">
         <div className="row align-items-center">
           <div className="col-lg-2 col-5">
@@ -50,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({ logo, hotline, navLinks }) => {
                 <ul className="main_menu_list unordered_list">
                   {navLinks.map((link, index) => (
                     <li key={index}>
-                      <Link className="nav-link" href={link.link}>
+                      <Link className="nav-link" href={normalizeNavHref(link.link)}>
                         {link.label}
                       </Link>
                     </li>
