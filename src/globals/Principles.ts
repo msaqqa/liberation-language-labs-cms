@@ -4,6 +4,8 @@ export const Principles: GlobalConfig = {
   slug: 'principles-page',
   access: {
     read: () => true,
+    update: ({ req: { user } }) => !!user,
+    create: ({ req: { user } }) => !!user,
   },
   admin: {
     group: 'Pages',

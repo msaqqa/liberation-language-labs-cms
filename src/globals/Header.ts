@@ -4,6 +4,8 @@ export const Header: GlobalConfig = {
   slug: 'header',
   access: {
     read: () => true,
+    update: ({ req: { user } }) => !!user,
+    create: ({ req: { user } }) => !!user,
   },
   admin: {
     group: 'Layout',

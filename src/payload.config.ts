@@ -17,6 +17,11 @@ import { Principles } from './globals/Principles'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const csrfOrigins = process.env.SERVER_URL ? [process.env.SERVER_URL] : []
+
+if (process.env.NODE_ENV !== 'production') {
+  csrfOrigins.push('http://localhost:3000')
+}
 
 export default buildConfig({
   serverURL: process.env.SERVER_URL,
@@ -32,6 +37,7 @@ export default buildConfig({
       },
     },
   },
+  csrf: csrfOrigins,
   collections: [Users, Media, Blogs],
   globals: [Header, Footer, Home, Principles],
   editor: lexicalEditor(),

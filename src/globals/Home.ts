@@ -4,6 +4,8 @@ export const Home: GlobalConfig = {
   slug: 'home-page',
   access: {
     read: () => true,
+    update: ({ req: { user } }) => !!user,
+    create: ({ req: { user } }) => !!user,
   },
   admin: {
     group: 'Pages',
