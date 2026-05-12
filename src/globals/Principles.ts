@@ -5,7 +5,6 @@ export const Principles: GlobalConfig = {
   access: {
     read: () => true,
     update: ({ req: { user } }) => !!user,
-    create: ({ req: { user } }) => !!user,
   },
   admin: {
     group: 'Pages',
