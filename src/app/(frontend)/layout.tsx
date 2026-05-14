@@ -4,7 +4,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import BootstrapJS from '@/components/BootstrapJS'
+import ClientScripts from '@/components/ClientScripts'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 const openSans = Open_Sans({
@@ -50,7 +50,6 @@ export default async function RootLayout({
         <link rel="stylesheet" href="/assets/css/style.min.css" media="screen" />
       </head>
       <body className="page_wrapper" suppressHydrationWarning={true}>
-        <BootstrapJS />
         <div className="backtotop">
           <a href="#!" className="scroll">
             <i className="fa-solid fa-arrow-up"></i>
@@ -69,8 +68,7 @@ export default async function RootLayout({
           designerText={footerData.designerText as any}
           designerLink={footerData.designerLink as any}
         />
-        {/* <Script src="/assets/js/bootstrap.min.js" strategy="afterInteractive" />
-        <Script src="/assets/js/main.min.js" strategy="afterInteractive" /> */}
+        <ClientScripts />
       </body>
     </html>
   )

@@ -1,6 +1,3 @@
-'use client'
-
-import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getMedia } from '@/lib/media'
 
@@ -33,26 +30,26 @@ const normalizeNavHref = (href: string) => {
 }
 
 const Header: React.FC<HeaderProps> = ({ logo, hotline, navLinks }) => {
-  const [isSticky, setIsSticky] = useState(false)
+  // const [isSticky, setIsSticky] = useState(false)
   const getLogo = getMedia(logo)
 
-  useEffect(() => {
-    const syncStickyState = () => {
-      setIsSticky(window.scrollY > 0)
-    }
+  // useEffect(() => {
+  //   const syncStickyState = () => {
+  //     setIsSticky(window.scrollY > 0)
+  //   }
 
-    syncStickyState()
-    window.addEventListener('scroll', syncStickyState)
-    window.addEventListener('pageshow', syncStickyState)
+  //   syncStickyState()
+  //   window.addEventListener('scroll', syncStickyState)
+  //   window.addEventListener('pageshow', syncStickyState)
 
-    return () => {
-      window.removeEventListener('scroll', syncStickyState)
-      window.removeEventListener('pageshow', syncStickyState)
-    }
-  }, [])
+  //   return () => {
+  //     window.removeEventListener('scroll', syncStickyState)
+  //     window.removeEventListener('pageshow', syncStickyState)
+  //   }
+  // }, [])
 
   return (
-    <header className={`site_header${isSticky ? ' sticky' : ''}`}>
+    <header className="site_header">
       <div className="container">
         <div className="row align-items-center">
           <div className="col-lg-2 col-5">

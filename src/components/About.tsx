@@ -9,7 +9,6 @@ interface AboutProps {
 }
 
 const About: React.FC<AboutProps> = ({ title, subtitle, description, imageUrl }) => {
-  console.log('description', description)
   return (
     <section className="about_section section_space_lg bg_primary_light" id="about">
       <div className="container">

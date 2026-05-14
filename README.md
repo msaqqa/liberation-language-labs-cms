@@ -1,67 +1,176 @@
-# Payload Blank Template
+# Liberation Language Labs CMS
 
-This template comes configured with the bare minimum to get started on anything you need.
+Production-ready Next.js + Payload CMS project for the Liberation Language Labs website.
 
-## Quick start
+This repository includes:
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+- A public marketing website (home, principles, blog, blog details)
+- A Payload admin panel for content management
+- PostgreSQL-backed CMS data
+- S3-compatible media storage
 
-## Quick Start - local setup
+## Tech Stack
 
-To spin up this template locally, follow these steps:
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Payload CMS 3
+- PostgreSQL (`@payloadcms/db-postgres`)
+- S3-compatible object storage (`@payloadcms/storage-s3`)
+- Bootstrap 5 (UI interactions)
+- Playwright (E2E tests)
+- Vitest (integration/unit test tooling)
 
-### Clone
+## Key Features
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+- CMS-managed global content:
+  - Header
+  - Footer
+  - Home Page sections
+  - Principles Page content
+- Blog collection with automatic slug generation
+- Authenticated admin users (`users` collection)
+- Public REST and GraphQL APIs via Payload Next routes
+- Rich text editing via Lexical
+- External media hosting through S3-compatible storage
 
-### Development
+## Project Structure (High Level)
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+```text
+src/
+  app/
+    (frontend)/            # Public website routes
+    (payload)/             # Admin + Payload API routes
+  collections/             # Payload collections (Users, Media, Blogs)
+  globals/                 # Payload globals (Header, Footer, Home, Principles)
+  payload.config.ts        # Payload CMS configuration
+public/
+  assets/                  # Static theme assets (css, js, images, fonts)
+tests/
+  e2e/                     # Playwright E2E tests
+  int/                     # Integration tests
+```
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+## Prerequisites
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+- Node.js: `^18.20.2 || >=20.9.0`
+- pnpm: `^9 || ^10`
+- PostgreSQL database
+- S3-compatible object storage (R2, MinIO, AWS S3, etc.)
 
-#### Docker (Optional)
+## Environment Variables
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+Create a `.env` file in the project root with at least the following values:
 
-To do so, follow these steps:
+```bash
+NODE_ENV=development
+SERVER_URL=http://localhost:3000
+PAYLOAD_SECRET=replace-with-a-strong-random-secret
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB_NAME
 
-## How it works
+S3_BUCKET=your-bucket-name
+S3_ENDPOINT=https://your-s3-endpoint
+S3_ACCESS_KEY=your-access-key
+S3_SECRET_KEY=your-secret-key
+S3_PUBLIC_URL=https://your-public-cdn-or-bucket-url
+```
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+Notes:
 
-### Collections
+- `SERVER_URL` is used for Payload server URL and CSRF origin handling.
+- `Media` collection uses `disableLocalStorage: true`, so S3 settings are required for uploads.
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+## Local Development
 
-- #### Users (Authentication)
+Install dependencies:
 
-  Users are auth-enabled collections that have access to the admin panel.
+```bash
+pnpm install
+```
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+Run development server:
 
-- #### Media
+```bash
+pnpm dev
+```
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+Open:
 
-### Docker
+- Site: `http://localhost:3000`
+- Admin panel: `http://localhost:3000/admin`
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+First-time admin access:
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+- On first run, create your initial admin user through the Payload setup flow.
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+## Available Scripts
 
-## Questions
+- `pnpm dev` - Start development server
+- `pnpm devsafe` - Remove `.next` then start dev server
+- `pnpm build` - Production build
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
+- `pnpm generate:types` - Generate Payload TypeScript types
+- `pnpm generate:importmap` - Regenerate Payload admin import map
+- `pnpm payload` - Run Payload CLI
+- `pnpm test` - Run integration and E2E tests
+- `pnpm test:e2e` - Run Playwright suite
+- `pnpm test:int` - Run Vitest suite
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+## Public Routes
+
+- `/` - Home page
+- `/principles` - Principles page
+- `/blog` - Blog listing
+- `/blog/[slug]` - Blog detail page
+
+## CMS API Endpoints
+
+- `/api/[...slug]` - Payload REST API
+- `/api/graphql` - GraphQL endpoint
+- `/api/graphql-playground` - GraphQL playground
+
+## Content Model Summary
+
+Collections:
+
+- `users` - Admin authentication
+- `media` - Media uploads (S3-backed)
+- `blogs` - Blog posts with generated slug + publish controls
+
+Globals:
+
+- `header` - Logo, hotline, nav links
+- `footer` - Logo, nav links, copyright/designer fields
+- `home-page` - Home sections (hero, about, services, pricing, contact)
+- `principles-page` - Principles page banner and rich text sections
+
+## Testing
+
+E2E tests are configured with Playwright in `playwright.config.ts`.
+
+Important:
+
+- `test:int` currently points to `./vitest.config.mts`.
+- If this file does not exist in your branch, either add it or update the script path in `package.json`.
+
+## Deployment Notes
+
+- Ensure all environment variables above are configured in your hosting platform.
+- Set `SERVER_URL` to the public application URL in production.
+- Confirm S3 bucket permissions and `S3_PUBLIC_URL` are correctly configured for media rendering.
+
+## Maintenance Notes
+
+- `src/app/(payload)/api/*` route files are generated by Payload; avoid manual edits.
+- After schema changes, run:
+
+```bash
+pnpm generate:types
+pnpm generate:importmap
+```
+
+## License
+
+MIT

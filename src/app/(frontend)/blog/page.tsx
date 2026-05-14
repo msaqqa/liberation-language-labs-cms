@@ -34,7 +34,7 @@ interface BlogPageProps {
 async function fetchPosts(page: number): Promise<PostsResponse> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/api/blogs?page=${page}&limit=${POSTS_PER_PAGE}&sort=-publishedDate&where[published][equals]=true`,
+      `${process.env.SERVER_URL}/api/blogs?page=${page}&limit=${POSTS_PER_PAGE}&sort=-publishedDate&where[published][equals]=true`,
       {
         next: { revalidate: 3600 }, // Cache for 1 hour
       },
@@ -110,7 +110,7 @@ function getPaginationPages(currentPage: number, totalPages: number): (number | 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams
   const currentPage = parseInt(params.page || '1', 10)
-  const { docs: posts, totalPages } = await fetchPosts(currentPage)
+  const { docs: blogs, totalPages } = await fetchPosts(currentPage)
 
   return (
     <>
@@ -145,14 +145,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           <div className="row">
             {/* Main Content */}
             <div className="col-lg-8">
-              {posts.length === 0 ? (
-                <div className="text-center py-5">No posts found</div>
+              {blogs.length === 0 ? (
+                <div className="text-center py-5">No blogs found</div>
               ) : (
                 <>
                   <div className="row">
-                    {posts.map((post) => (
-                      <div className="col-12 col-md-6">
-                        <BlogCard key={post.id} {...post} />
+                    {blogs.map((blog) => (
+                      <div className="col-12 col-md-6" key={blog.id}>
+                        <BlogCard {...blog} />
                       </div>
                     ))}
                   </div>

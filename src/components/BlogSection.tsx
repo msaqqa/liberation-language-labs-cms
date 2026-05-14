@@ -1,7 +1,4 @@
-'use client'
-
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
 import { BlogCard } from './BlogCard'
 
 interface Post {
@@ -16,37 +13,33 @@ interface Post {
   }
 }
 
-export function BlogSection() {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [loading, setLoading] = useState(true)
+interface BlogsResponse {
+  docs: Post[]
+}
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch(
-          '/api/blogs?limit=3&sort=-publishedDate&where[published][equals]=true',
-        )
-        const data = await response.json()
-        setPosts(data.docs || [])
-      } catch (error) {
-        console.error('Failed to fetch posts:', error)
-      } finally {
-        setLoading(false)
-      }
+async function fetchBlogs(): Promise<Post[]> {
+  try {
+    const response = await fetch(
+      `${process.env.SERVER_URL}/api/blogs?limit=3&sort=-publishedDate&where[published][equals]=true`,
+      {
+        next: { revalidate: 3600 }, // Cache for 1 hour
+      },
+    )
+
+    if (!response.ok) {
+      return []
     }
 
-    fetchPosts()
-  }, [])
-
-  if (loading) {
-    return (
-      <section className="blog_section section_space_lg bg_primary_light">
-        <div className="container">
-          <div className="text-center">Loading...</div>
-        </div>
-      </section>
-    )
+    const data: BlogsResponse = await response.json()
+    return data.docs || []
+  } catch (error) {
+    console.error('Failed to fetch blogs:', error)
+    return []
   }
+}
+
+export async function BlogSection() {
+  const blogs = await fetchBlogs()
 
   return (
     <section className="blog_section section_space_lg bg_primary_light">
@@ -68,13 +61,21 @@ export function BlogSection() {
             </div>
           </div>
         </div>
-        <div className="row justify-content-center">
-          {posts.map((post) => (
-            <div className="col-12 col-md-6 col-lg-4">
-              <BlogCard key={post.id} {...post} />
-            </div>
-          ))}
-        </div>
+
+        {blogs.length === 0 ? (
+          <div className="row justify-content-center">
+            <div className="col-12 text-center">No blogs found</div>
+          </div>
+        ) : (
+          <div className="row justify-content-center">
+            {blogs.map((blog) => (
+              <div className="col-12 col-md-6 col-lg-4" key={blog.id}>
+                <BlogCard {...blog} />
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="d-md-none text-center mt-4">
           <Link className="btn btn-primary" href="/blog">
             <span className="btn_text">Read More</span>
