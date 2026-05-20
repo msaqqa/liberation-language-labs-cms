@@ -23,7 +23,7 @@ interface ArchiveResponse {
 
 async function fetchArchivePosts(currentSlug?: string): Promise<Post[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const baseUrl = process.env.SERVER_URL
     const excludeCurrentSlug = currentSlug
       ? `&where[slug][not_equals]=${encodeURIComponent(currentSlug)}`
       : ''

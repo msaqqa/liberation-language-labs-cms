@@ -1628,7 +1628,6 @@ button[class*='-dark']:hover {
 }
 .site_logo img {
   max-width: 100%;
-  width: 180px;
   height: auto;
   display: block;
 }

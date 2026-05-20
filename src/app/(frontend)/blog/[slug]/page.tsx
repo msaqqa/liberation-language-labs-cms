@@ -26,7 +26,7 @@ interface BlogDetailPageProps {
 async function fetchPost(slug: string): Promise<Post | null> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/api/blogs?where[slug][equals]=${slug}&limit=1`,
+      `${process.env.SERVER_URL}/api/blogs?where[slug][equals]=${slug}&limit=1`,
       {
         next: { revalidate: 3600 }, // Cache for 1 hour
       },
