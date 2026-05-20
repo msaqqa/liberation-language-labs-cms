@@ -63,7 +63,7 @@ const Footer: React.FC<FooterProps> = ({
           </p>
           {designerText && (
             <p className="copyright_text m-0">
-              Website designed by
+              Website designed by{' '}
               <a href={designerLink} target="_blank" rel="noopener noreferrer">
                 {designerText}
               </a>

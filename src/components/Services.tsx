@@ -1,16 +1,12 @@
-import React from "react";
+import React from 'react'
 
 interface ServicesProps {
-  title: string;
-  description?: string;
-  servicesLists: { listTitle: string; listItems: { item: string }[] }[];
+  title: string
+  description?: string
+  servicesLists: { listTitle: string; listItems: { item: string }[] }[]
 }
 
-const Services: React.FC<ServicesProps> = ({
-  title,
-  description,
-  servicesLists,
-}) => {
+const Services: React.FC<ServicesProps> = ({ title, description, servicesLists }) => {
   return (
     <section
       className="pricing_section section_space_lg bg_primary_light decoration_wrapper"
@@ -19,11 +15,9 @@ const Services: React.FC<ServicesProps> = ({
       <div className="container">
         <div className="section_heading text-center">
           <h2 className="section_heading_text">{title}</h2>
-          {description && (
-            <p className="section_heading_description">{description}</p>
-          )}
+          {description && <p className="section_heading_description">{description}</p>}
         </div>
-        <div className="row g-4">
+        <div className="row justify-content-center g-4">
           {servicesLists.map((l, index) => (
             <div className="col-12 col-md-6" key={index}>
               <div className="pricing_item">
@@ -56,7 +50,7 @@ const Services: React.FC<ServicesProps> = ({
         />
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Services;
+export default Services
