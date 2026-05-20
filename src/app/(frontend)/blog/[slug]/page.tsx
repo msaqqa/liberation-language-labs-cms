@@ -53,7 +53,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       {/* Page Banner */}
       <section className="page_banner decoration_wrapper">
         <div className="container">
-          <h1 className="page_title">{post.title}</h1>
+          <h1 className="page_title">{post?.title || 'Blog Details'}</h1>
           <ul className="breadcrumb_nav unordered_list justify-content-center justify-content-lg-start">
             <li>
               <Link href="/">Home</Link>
