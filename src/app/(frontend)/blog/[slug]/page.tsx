@@ -48,28 +48,6 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params
   const post = await fetchPost(slug)
 
-  if (!post) {
-    return (
-      <main className="page_content">
-        <section className="page_banner decoration_wrapper">
-          <div className="container">
-            <h1 className="page_title">Post Not Found</h1>
-          </div>
-        </section>
-        <section className="section_space_lg">
-          <div className="container">
-            <div className="text-center">
-              <p>The post you're looking for doesn't exist.</p>
-              <Link href="/blog" className="btn btn-primary mt-3">
-                Back to Blog
-              </Link>
-            </div>
-          </div>
-        </section>
-      </main>
-    )
-  }
-
   return (
     <>
       {/* Page Banner */}
@@ -94,71 +72,92 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
         </div>
       </section>
 
-      {/* Blog Details Section */}
-      <section className="blog_details_section section_space_lg pb-0">
-        <div className="container">
-          <div className="row">
-            {/* Main Content */}
-            <div className="col-lg-8">
-              {/* Featured Image */}
-              {post.image?.url && (
-                <div className="details_image mb-4">
-                  <Image
-                    src={post.image.url}
-                    alt={post.image.alt || post.title}
-                    width={800}
-                    height={500}
-                    className="img-fluid rounded"
-                  />
-                </div>
-              )}
-
-              {/* Post Content */}
-              <div className="details_content">
-                {/* Post Meta */}
-                <ul className="post_meta unordered_list mb-4">
-                  <li>
-                    <i className="fa-solid fa-calendar-days"></i> {formatDate(post.publishedDate)}
-                  </li>
-                </ul>
-
-                {/* Post Body */}
-                <div className="post_body mb-4">
-                  {post.description && (
-                    <p className="lead mb-3">
-                      <strong>{post.description}</strong>
-                    </p>
-                  )}
-
-                  {/* Rich Text Content */}
-                  {post.details && typeof post.details === 'object' ? (
-                    <RichText data={post.details} />
-                  ) : (
-                    <div className="content" dangerouslySetInnerHTML={{ __html: post.details }} />
-                  )}
-                </div>
-
-                {/* Navigation */}
-                <div className="post_navigation my-5 pt-4 border-top">
-                  <Link className="btn btn-primary" href="/blog">
-                    <span className="btn_text" data-text="Back to Blog">
-                      Back to Blog
-                    </span>
-                    <span className="btn_icon">
-                      <i className="fa-solid fa-arrow-up-right"></i>
-                    </span>
-                  </Link>
-                </div>
+      {!post ? (
+        <section className="section_space_lg">
+          {/* Blog Not Found Section */}
+          <div className="container">
+            <div className="text-center">
+              <p>The post you're looking for doesn't exist.</p>
+              <div className="post_navigation my-5 pt-4">
+                <Link className="btn btn-primary" href="/blog">
+                  <span className="btn_text" data-text="Back to Blog">
+                    Back to Blogs
+                  </span>
+                  <span className="btn_icon">
+                    <i className="fa-solid fa-arrow-up-right"></i>
+                  </span>
+                </Link>
               </div>
             </div>
+          </div>
+        </section>
+      ) : (
+        <section className="blog_details_section section_space_lg pb-0">
+          {/* Blog Details Section */}
+          <div className="container">
+            <div className="row">
+              {/* Main Content */}
+              <div className="col-lg-8">
+                {/* Featured Image */}
+                {post.image?.url && (
+                  <div className="details_image mb-4">
+                    <Image
+                      src={post.image.url}
+                      alt={post.image.alt || post.title}
+                      width={800}
+                      height={500}
+                      className="img-fluid rounded"
+                    />
+                  </div>
+                )}
 
-            {/* Sidebar */}
-            <div className="col-lg-4">
-              <ArchiveWidget />
+                {/* Post Content */}
+                <div className="details_content">
+                  {/* Post Meta */}
+                  <ul className="post_meta unordered_list mb-4">
+                    <li>
+                      <i className="fa-solid fa-calendar-days"></i> {formatDate(post.publishedDate)}
+                    </li>
+                  </ul>
+
+                  {/* Post Body */}
+                  <div className="post_body mb-4">
+                    {post.description && (
+                      <p className="lead mb-3">
+                        <strong>{post.description}</strong>
+                      </p>
+                    )}
+
+                    {/* Rich Text Content */}
+                    {post.details && typeof post.details === 'object' ? (
+                      <RichText data={post.details} />
+                    ) : (
+                      <div className="content" dangerouslySetInnerHTML={{ __html: post.details }} />
+                    )}
+                  </div>
+
+                  {/* Navigation */}
+                  <div className="post_navigation my-5 pt-4 border-top">
+                    <Link className="btn btn-primary" href="/blog">
+                      <span className="btn_text" data-text="Back to Blog">
+                        Back to Blogs
+                      </span>
+                      <span className="btn_icon">
+                        <i className="fa-solid fa-arrow-up-right"></i>
+                      </span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar */}
+              <div className="col-lg-4">
+                <ArchiveWidget />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   )
 }
