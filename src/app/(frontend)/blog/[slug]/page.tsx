@@ -99,7 +99,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               {/* Main Content */}
               <div className="col-lg-8">
                 {/* Featured Image */}
-                {post.image?.url && (
+                {post?.image?.url && (
                   <div className="details_image mb-4">
                     <Image
                       src={post.image.url}
@@ -116,23 +116,27 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                   {/* Post Meta */}
                   <ul className="post_meta unordered_list mb-4">
                     <li>
-                      <i className="fa-solid fa-calendar-days"></i> {formatDate(post.publishedDate)}
+                      <i className="fa-solid fa-calendar-days"></i>{' '}
+                      {post?.publishedDate && formatDate(post.publishedDate)}
                     </li>
                   </ul>
 
                   {/* Post Body */}
                   <div className="post_body mb-4">
-                    {post.description && (
+                    {post?.description && (
                       <p className="lead mb-3">
                         <strong>{post.description}</strong>
                       </p>
                     )}
 
                     {/* Rich Text Content */}
-                    {post.details && typeof post.details === 'object' ? (
+                    {post?.details && typeof post.details === 'object' ? (
                       <RichText data={post.details} />
                     ) : (
-                      <div className="content" dangerouslySetInnerHTML={{ __html: post.details }} />
+                      <div
+                        className="content"
+                        dangerouslySetInnerHTML={{ __html: post?.details || '' }}
+                      />
                     )}
                   </div>
 
