@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { formatDate } from '@/lib/media'
@@ -19,8 +18,6 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ title, description, slug, publishedDate, image }: BlogCardProps) {
-  const [imageLoaded, setImageLoaded] = useState(false)
-
   return (
     <div className="blog_item">
       <div className="blog_image">
@@ -36,11 +33,6 @@ export function BlogCard({ title, description, slug, publishedDate, image }: Blo
               width={400}
               height={300}
               className="img-fluid"
-              onLoad={() => setImageLoaded(true)}
-              style={{
-                opacity: imageLoaded ? 1 : 0.45,
-                transition: 'opacity 0.3s ease',
-              }}
             />
           ) : (
             <div className="placeholder-image">No Image</div>

@@ -33,6 +33,11 @@ export const Blogs: CollectionConfig = {
         revalidatePath('/', 'layout')
       },
     ],
+    afterDelete: [
+      async () => {
+        revalidatePath('/', 'layout')
+      },
+    ],
   },
   access: {
     read: async () => true,
