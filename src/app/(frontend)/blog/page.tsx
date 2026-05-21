@@ -2,9 +2,9 @@ import { BlogCard } from '@/components/BlogCard'
 import { ArchiveWidget } from '@/components/ArchiveWidget'
 import Link from 'next/link'
 
-const POSTS_PER_PAGE = 6
+const BLOGS_PER_PAGE = 6
 
-interface Post {
+interface Blog {
   id: string
   title: string
   description: string
@@ -16,8 +16,8 @@ interface Post {
   }
 }
 
-interface PostsResponse {
-  docs: Post[]
+interface BlogsResponse {
+  docs: Blog[]
   totalDocs: number
   totalPages: number
   page: number
@@ -31,10 +31,10 @@ interface BlogPageProps {
   }>
 }
 
-async function fetchPosts(page: number): Promise<PostsResponse> {
+async function fetchBlogs(page: number): Promise<BlogsResponse> {
   try {
     const response = await fetch(
-      `${process.env.SERVER_URL}/api/blogs?page=${page}&limit=${POSTS_PER_PAGE}&sort=-publishedDate&where[published][equals]=true`,
+      `${process.env.SERVER_URL}/api/blogs?page=${page}&limit=${BLOGS_PER_PAGE}&sort=-publishedDate&where[published][equals]=true`,
       {
         next: { revalidate: 3600 }, // Cache for 1 hour
       },
@@ -53,7 +53,7 @@ async function fetchPosts(page: number): Promise<PostsResponse> {
 
     return await response.json()
   } catch (error) {
-    console.error('Failed to fetch posts:', error)
+    console.error('Failed to fetch blogs:', error)
     return {
       docs: [],
       totalDocs: 0,
@@ -110,7 +110,7 @@ function getPaginationPages(currentPage: number, totalPages: number): (number | 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams
   const currentPage = parseInt(params.page || '1', 10)
-  const { docs: blogs, totalPages } = await fetchPosts(currentPage)
+  const { docs: blogs, totalPages } = await fetchBlogs(currentPage)
 
   return (
     <>

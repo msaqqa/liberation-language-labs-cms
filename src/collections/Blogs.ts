@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache'
 import { CollectionConfig } from 'payload'
 
 const generateSlug = (title: string): string =>
@@ -25,6 +26,11 @@ export const Blogs: CollectionConfig = {
           data.slug = generateSlug(data.title)
         }
         return data
+      },
+    ],
+    afterChange: [
+      async () => {
+        revalidatePath('/', 'layout')
       },
     ],
   },

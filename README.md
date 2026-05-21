@@ -18,8 +18,6 @@ This repository includes:
 - PostgreSQL (`@payloadcms/db-postgres`)
 - S3-compatible object storage (`@payloadcms/storage-s3`)
 - Bootstrap 5 (UI interactions)
-- Playwright (E2E tests)
-- Vitest (integration/unit test tooling)
 
 ## Key Features
 
@@ -46,9 +44,6 @@ src/
   payload.config.ts        # Payload CMS configuration
 public/
   assets/                  # Static theme assets (css, js, images, fonts)
-tests/
-  e2e/                     # Playwright E2E tests
-  int/                     # Integration tests
 ```
 
 ## Prerequisites
@@ -114,9 +109,6 @@ First-time admin access:
 - `pnpm generate:types` - Generate Payload TypeScript types
 - `pnpm generate:importmap` - Regenerate Payload admin import map
 - `pnpm payload` - Run Payload CLI
-- `pnpm test` - Run integration and E2E tests
-- `pnpm test:e2e` - Run Playwright suite
-- `pnpm test:int` - Run Vitest suite
 
 ## Public Routes
 
@@ -145,15 +137,6 @@ Globals:
 - `footer` - Logo, nav links, copyright/designer fields
 - `home-page` - Home sections (hero, about, services, pricing, contact)
 - `principles-page` - Principles page banner and rich text sections
-
-## Testing
-
-E2E tests are configured with Playwright in `playwright.config.ts`.
-
-Important:
-
-- `test:int` currently points to `./vitest.config.mts`.
-- If this file does not exist in your branch, either add it or update the script path in `package.json`.
 
 ## Deployment Notes
 
