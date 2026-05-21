@@ -1,8 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { formatDate } from '@/lib/media'
+
+const BLOG_IMAGE_PLACEHOLDER_COLOR = '#eef3f7'
 
 interface BlogCardProps {
   title: string
@@ -16,10 +19,16 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ title, description, slug, publishedDate, image }: BlogCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false)
+
   return (
     <div className="blog_item">
       <div className="blog_image">
-        <Link className="blog_image_wrap" href={`/blog/${slug}`}>
+        <Link
+          className="blog_image_wrap d-block"
+          href={`/blog/${slug}`}
+          style={{ backgroundColor: BLOG_IMAGE_PLACEHOLDER_COLOR }}
+        >
           {image?.url ? (
             <Image
               src={image.url}
@@ -27,6 +36,11 @@ export function BlogCard({ title, description, slug, publishedDate, image }: Blo
               width={400}
               height={300}
               className="img-fluid"
+              onLoad={() => setImageLoaded(true)}
+              style={{
+                opacity: imageLoaded ? 1 : 0.45,
+                transition: 'opacity 0.3s ease',
+              }}
             />
           ) : (
             <div className="placeholder-image">No Image</div>
