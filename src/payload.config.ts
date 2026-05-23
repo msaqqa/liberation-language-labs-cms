@@ -4,6 +4,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { s3Storage } from '@payloadcms/storage-s3'
 // Collections
 import { Users } from './collections/Users'
@@ -23,6 +24,32 @@ if (process.env.NODE_ENV !== 'production') {
   csrfOrigins.push('http://localhost:3000')
 }
 
+const defaultFromAddress = process.env.EMAIL_FROM_ADDRESS || 'no-reply@liberationlabs.local'
+const defaultFromName = process.env.EMAIL_FROM_NAME || 'Liberation Language Labs'
+
+const emailAdapter =
+  process.env.SMTP_HOST && process.env.SMTP_PORT
+    ? nodemailerAdapter({
+        defaultFromAddress,
+        defaultFromName,
+        transportOptions: {
+          host: process.env.SMTP_HOST,
+          port: Number(process.env.SMTP_PORT),
+          secure: process.env.SMTP_SECURE === 'true',
+          auth:
+            process.env.SMTP_USER && process.env.SMTP_PASS
+              ? {
+                  user: process.env.SMTP_USER,
+                  pass: process.env.SMTP_PASS,
+                }
+              : undefined,
+        },
+      })
+    : nodemailerAdapter({
+        defaultFromAddress,
+        defaultFromName,
+      })
+
 export default buildConfig({
   serverURL: process.env.SERVER_URL,
   admin: {
@@ -41,6 +68,7 @@ export default buildConfig({
   collections: [Users, Media, Blogs],
   globals: [Header, Footer, Home, Principles],
   editor: lexicalEditor(),
+  email: emailAdapter,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

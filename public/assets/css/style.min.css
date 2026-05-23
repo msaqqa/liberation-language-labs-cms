@@ -2469,14 +2469,16 @@ button[class*='-dark']:hover {
 }
 .blog_item .blog_image_wrap {
   display: block;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
+  background-color: '#eef3f7';
 }
 .blog_item .blog_image_wrap img {
   width: 100%;
   display: block;
   -webkit-transition: var(--bs-transition);
   transition: var(--bs-transition);
+  object-fit: cover;
 }
 .blog_item .blog_image_wrap:hover img {
   -webkit-transform: scale(1.08);

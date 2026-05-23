@@ -4,8 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { formatDate } from '@/lib/media'
 
-const BLOG_IMAGE_PLACEHOLDER_COLOR = '#eef3f7'
-
 interface BlogCardProps {
   title: string
   description: string
@@ -21,21 +19,14 @@ export function BlogCard({ title, description, slug, publishedDate, image }: Blo
   return (
     <div className="blog_item">
       <div className="blog_image">
-        <Link
-          className="blog_image_wrap d-block"
-          href={`/blog/${slug}`}
-          style={{ backgroundColor: BLOG_IMAGE_PLACEHOLDER_COLOR }}
-        >
-          {image?.url ? (
+        <Link className="blog_image_wrap ratio ratio-16x9" href={`/blog/${slug}`}>
+          {image?.url && (
             <Image
               src={image.url}
               alt={image.alt || title}
-              width={400}
-              height={300}
-              className="img-fluid"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 33vw"
             />
-          ) : (
-            <div className="placeholder-image">No Image</div>
           )}
         </Link>
       </div>

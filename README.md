@@ -69,12 +69,21 @@ S3_ENDPOINT=https://your-s3-endpoint
 S3_ACCESS_KEY=your-access-key
 S3_SECRET_KEY=your-secret-key
 S3_PUBLIC_URL=https://your-public-cdn-or-bucket-url
+
+EMAIL_FROM_ADDRESS=no-reply@your-domain.com
+EMAIL_FROM_NAME="Liberation Language Labs"
+SMTP_HOST=smtp.your-provider.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-smtp-username
+SMTP_PASS=your-smtp-password
 ```
 
 Notes:
 
 - `SERVER_URL` is used for Payload server URL and CSRF origin handling.
 - `Media` collection uses `disableLocalStorage: true`, so S3 settings are required for uploads.
+- If SMTP variables are not set, Payload will use a Nodemailer test transport in development, and production password-reset email delivery will not be guaranteed.
 
 ## Local Development
 
