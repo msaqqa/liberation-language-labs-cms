@@ -67,15 +67,14 @@ export async function ArchiveWidget({ currentSlug }: ArchiveWidgetProps) {
               <div className="blog_item_small">
                 <div className="blog_image">
                   <Link className="blog_image_wrap" href={`/blog/${post.slug}`}>
-                    {post.image?.url ? (
+                    {post.image?.url && (
                       <Image
                         src={post.image.url}
                         alt={post.image.alt || post.title}
-                        width={120}
-                        height={90}
+                        fill
+                        sizes="90px"
+                        className="sidebar-thumb-img"
                       />
-                    ) : (
-                      <img src="/assets/images/blogs/small_blog_image_1.jpg" alt={post.title} />
                     )}
                   </Link>
                 </div>

@@ -148,13 +148,12 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               <div className="col-lg-8">
                 {/* Featured Image */}
                 {blog?.image?.url && (
-                  <div className="details_image mb-4">
+                  <div className="details_image mb-4 ratio ratio-16x9">
                     <Image
                       src={blog.image.url}
                       alt={blog.image.alt || blog.title}
-                      width={800}
-                      height={500}
-                      className="img-fluid rounded"
+                      fill
+                      sizes="(max-width: 992px) 100vw, 66vw"
                     />
                   </div>
                 )}
