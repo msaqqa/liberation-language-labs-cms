@@ -20,6 +20,22 @@ export const metadata: Metadata = {
   icons: {
     icon: '/assets/images/site_logo/favourite_icon.svg',
   },
+  openGraph: {
+    title: 'Liberation Language Labs',
+    description: 'Speech therapy that affirms, engages, and empowers',
+    url: 'https://liberationlanguagelabs.org',
+    siteName: 'Liberation Language Labs',
+    images: [
+      {
+        url: 'https://liberationlanguagelabs.org/assets/images/site_logo/site_logo_primary.png',
+        width: 1200,
+        height: 630,
+        alt: 'Liberation Language Labs Logo',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 }
 
 export default async function RootLayout({

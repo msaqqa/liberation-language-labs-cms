@@ -38,6 +38,7 @@
   --bs-focus-ring-width: 20px;
   --bs-focus-ring-opacity: 0.25;
   --bs-focus-ring-color: rgba(155, 66, 182, 0.25);
+  --bs-image-color: #eef3f7;
 }
 html,
 body {
@@ -2471,7 +2472,7 @@ button[class*='-dark']:hover {
   display: block;
   position: relative;
   overflow: hidden;
-  background-color: '#eef3f7';
+  background-color: var(--bs-image-color);
 }
 .blog_item .blog_image_wrap img {
   width: 100%;
@@ -2539,7 +2540,7 @@ button[class*='-dark']:hover {
   width: 90px;
   height: 90px;
   margin-right: 20px;
-  background-color: #eef3f7;
+  background-color: var(--bs-image-color);
 }
 .blog_item_small .blog_image_wrap {
   display: block;
@@ -2638,7 +2639,7 @@ button[class*='-dark']:hover {
   overflow: hidden;
   margin-bottom: 30px;
   border-radius: var(--bs-border-radius);
-  background-color: #eef3f7;
+  background-color: var(--bs-image-color);
 }
 [class*='_details_section'] .details_image img {
   width: 100%;
