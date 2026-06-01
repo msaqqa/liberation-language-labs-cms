@@ -2970,15 +2970,13 @@ blockquote cite {
   box-shadow: 0px 8px 30px 0px rgba(155, 66, 182, 0.07);
 }
 .error_section {
-  height: 100vh;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  min-height: 100dvh;
   display: flex;
-  padding: 100px 0;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
+  justify-content: center;
   background-color: var(--bs-primary-bg-subtle);
+  padding-top: 98.22px;
+  padding-bottom: 22px;
 }
 .error_section h1 {
   font-size: 270px;

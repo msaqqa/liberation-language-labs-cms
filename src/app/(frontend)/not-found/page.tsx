@@ -27,13 +27,13 @@ export default function FrontendNotFoundPage() {
       </div>
       <div className="decoration_item shape_leaf_1">
         <img
-          src="assets/images/shapes/shape_leaf_left_bottom.svg"
+          src="/assets/images/shapes/shape_leaf_left_bottom.svg"
           alt="Shape Leaf - Talking Minds - Psychotherapist Site Template"
         />
       </div>
       <div className="decoration_item shape_leaf_2">
         <img
-          src="assets/images/shapes/shape_leaf_right_top.svg"
+          src="/assets/images/shapes/shape_leaf_right_top.svg"
           alt="Shape Leaf - Talking Minds - Psychotherapist Site Template"
         />
       </div>
