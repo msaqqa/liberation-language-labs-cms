@@ -16,7 +16,7 @@ const openSans = Open_Sans({
 
 export const metadata: Metadata = {
   title: 'Liberation Language Labs',
-  description: 'Speech therapy that affirms, engages, and empowers',
+  description: 'Speech thersite apy that affirms, engages, and empowers',
   icons: {
     icon: '/assets/images/site_logo/favourite_icon.svg',
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: 'Liberation Language Labs',
     images: [
       {
-        url: `${process.env.SITE_URL}/assets/images/site_logo/og_preview_logo.png`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/assets/images/site_logo/og_preview_logo.png`,
         width: 1200,
         height: 630,
         alt: 'Liberation Language Labs Logo',
