@@ -51,21 +51,19 @@ const Header: React.FC<HeaderProps> = ({ logo, hotline, navLinks }) => {
   return (
     <header className="site_header">
       <div className="container">
-        <div className="row align-items-center">
-          <div className="col-lg-2 col-5">
-            <div className="site_logo">
-              <Link className="site_link" href="/">
-                <img
-                  src={getLogo.url || '/assets/images/site_logo/site_logo_primary.png'}
-                  alt={
-                    getLogo.alt ||
-                    'Site Logo – Liberation Language Labs – Psychotherapist Site Template'
-                  }
-                />
-              </Link>
-            </div>
+        <div className="d-flex align-items-center gap-4">
+          <div className="site_logo">
+            <Link className="site_link" href="/">
+              <img
+                src={getLogo.url || '/assets/images/site_logo/site_logo_primary.png'}
+                alt={
+                  getLogo.alt ||
+                  'Site Logo – Liberation Language Labs – Psychotherapist Site Template'
+                }
+              />
+            </Link>
           </div>
-          <div className="col-lg-8 col-2">
+          <div className="flex-grow-1">
             <nav className="main_menu navbar navbar-expand-lg">
               <div
                 className="main_menu_inner collapse navbar-collapse justify-content-center"
@@ -83,30 +81,28 @@ const Header: React.FC<HeaderProps> = ({ logo, hotline, navLinks }) => {
               </div>
             </nav>
           </div>
-          <div className="col-lg-2 col-5">
-            <ul className="header_btns_group unordered_list justify-content-end">
-              <li>
-                <button
-                  className="mobile_menu_btn"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#main_menu_dropdown"
-                  aria-expanded="false"
-                  aria-label="Toggle navigation"
-                >
-                  <i className="far fa-bars"></i>
-                </button>
-              </li>
-              <li>
-                <a className="btn_hotline" href={hotline.link}>
-                  <span className="btn_icon">
-                    <i className="fa-solid fa-phone"></i>
-                  </span>
-                  <span className="btn_text">{hotline.number}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+          <ul className="header_btns_group unordered_list justify-content-end">
+            <li>
+              <button
+                className="mobile_menu_btn"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#main_menu_dropdown"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <i className="far fa-bars"></i>
+              </button>
+            </li>
+            <li>
+              <a className="btn_hotline" href={hotline.link}>
+                <span className="btn_icon">
+                  <i className="fa-solid fa-phone"></i>
+                </span>
+                <span className="btn_text">{hotline.number}</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </header>

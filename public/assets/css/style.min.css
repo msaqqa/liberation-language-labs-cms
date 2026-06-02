@@ -3027,9 +3027,6 @@ blockquote cite {
   .container {
     max-width: 1230px;
   }
-  .site_header {
-    /* padding: 26px 0px; */
-  }
   .main_menu_list > li:not(:last-child) {
     margin: 0 10px 0 0;
   }
@@ -3059,9 +3056,6 @@ blockquote cite {
   .hero_section_counter > li {
     padding: 20px;
   }
-  .hero_section {
-    /* padding: 160px 0 100px; */
-  }
   .hero_section .shape_leaf {
     top: 110px;
     max-width: 250px;
@@ -3083,7 +3077,7 @@ blockquote cite {
     line-height: 28px;
   }
   .service_item {
-    padding: 45px;
+    padding: 30px;
   }
   .service_item .item_title {
     font-size: 22px;
@@ -3141,7 +3135,8 @@ blockquote cite {
 }
 @media screen and (max-width: 1199px) {
   .main_menu_list > li > a {
-    font-size: 15px;
+    font-size: 14px;
+    font-weight: 700;
     padding: 8px 12px;
   }
   .main_menu_list > li:not(:last-child) {
@@ -3153,6 +3148,7 @@ blockquote cite {
   }
   .btn_hotline .btn_text {
     font-size: 14px;
+    display: none;
   }
   .btn_hotline .btn_icon {
     width: 32px;
@@ -3303,9 +3299,6 @@ blockquote cite {
   .container {
     max-width: 730px;
   }
-  .site_header {
-    /* padding: 15px 0px; */
-  }
   .header_btns_group > li:first-child {
     display: inline-block;
   }
@@ -3350,8 +3343,8 @@ blockquote cite {
     line-height: 20px;
     padding: 12px 20px;
   }
-  .hero_section {
-    /* padding: 140px 0 100px; */
+  .btn_hotline .btn_text {
+    display: block;
   }
   .hero_image_wrap {
     padding: 30px;

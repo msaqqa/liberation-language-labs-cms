@@ -15,15 +15,16 @@ const openSans = Open_Sans({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: 'Liberation Language Labs',
-  description: 'Speech thersite apy that affirms, engages, and empowers',
+  description: 'Speech therapy that affirms, engages, and empowers',
   icons: {
     icon: '/assets/images/site_logo/favourite_icon.svg',
   },
   openGraph: {
     title: 'Liberation Language Labs',
     description: 'Speech therapy that affirms, engages, and empowers',
-    url: process.env.SITE_URL,
+    url: process.env.NEXT_PUBLIC_SITE_URL,
     siteName: 'Liberation Language Labs',
     images: [
       {
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Liberation Language Labs',
     description: 'Speech therapy that affirms, engages, and empowers',
-    images: [`${process.env.SITE_URL}/assets/images/site_logo/og_preview_logo.png`],
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/assets/images/site_logo/og_preview_logo.png`],
   },
 }
 

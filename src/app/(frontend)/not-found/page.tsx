@@ -9,8 +9,8 @@ export default function FrontendNotFoundPage() {
             <h1>404</h1>
             <h2>Oops! That Page Can’t be Found</h2>
             <p>
-              It looks like the link you followed might be broken or the page has been moved. Let's
-              get you back on track to exploring our speech therapy resources and blogs!
+              It looks like the link you followed might be broken or the page has been moved. Let’s
+              get you back home.
             </p>
             <div className="btn_wrap pb-0 text-center">
               <Link className="btn btn-primary" href="/">
