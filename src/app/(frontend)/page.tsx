@@ -17,7 +17,10 @@ export default async function HomePage() {
   const getUrl = (media: any) => (typeof media === 'object' ? media?.url : '')
 
   return (
-    <main>
+    <div className="ll-root">
+      <a className="skip" href="#about">
+        Skip to content
+      </a>
       <Hero title={homeData.hero.title} backgroundImage={homeData.hero.backgroundImage} />
 
       <About
@@ -55,6 +58,6 @@ export default async function HomePage() {
         email={homeData.contactInfo.email}
         address={homeData.contactInfo.address}
       />
-    </main>
+    </div>
   )
 }

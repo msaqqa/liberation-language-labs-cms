@@ -15,6 +15,8 @@ interface FooterProps {
   designerLink?: string
 }
 
+const normalizeHref = (href: string) => (href.startsWith('#') ? `/${href}` : href)
+
 const Footer: React.FC<FooterProps> = ({
   logo,
   navLinks,
@@ -23,55 +25,79 @@ const Footer: React.FC<FooterProps> = ({
   designerLink,
 }) => {
   const getLogo = getMedia(logo)
+
   return (
-    <footer className="site_footer bg_primary">
-      <div className="container">
-        <div className="site_footer_content">
-          <div className="row align-items-center">
-            <div className="col-lg-3">
-              <div className="site_logo">
-                <Link className="site_link" href="/">
-                  <img
-                    src={getLogo.url || '/assets/images/site_logo/site_logo_white.webp'}
-                    alt={
-                      getLogo.alt ||
-                      'Site Logo – Liberation Language Labs – Psychotherapist Site Template'
-                    }
-                  />
-                </Link>
-              </div>
-            </div>
-            <div className="col-lg-9">
-              <ul className="info_list unordered_list justify-content-center row g-3">
-                {navLinks.map((link, index) => (
-                  <li key={index} className="col-auto col-lg-4">
-                    <Link href={link.link}>
-                      <span className="info_icon">
-                        <i className="fa-solid fa-circle"></i>
-                      </span>
-                      <span className="info_text">{link.label}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+    <div className="ll-root polarity-dark">
+      <footer className="footer">
+        <div className="wrap footer__top">
+          <div className="footer__brand-col">
+            <Link href="/" aria-label="Liberation Language Labs — home">
+              <img
+                className="footer__logo"
+                src={getLogo.url || '/assets/images/site_logo/site_logo_white.png'}
+                alt={getLogo.alt || 'Liberation Language Labs'}
+              />
+            </Link>
+            <p className="footer__principles-head">Guiding principles</p>
+            <p className="footer__statement">
+              Grounded in abolitionist, decolonial values, on the traditional lands of the Lummi,
+              Nooksack, Nuwaha &amp; Semiahmoo tribes.
+            </p>
+            <Link className="link footer__principles-link" href="/principles">
+              Read the full statement{' '}
+              <span className="arr" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          </div>
+
+          <nav className="footer__col" aria-label="Footer">
+            <p className="footer__navhead">Links</p>
+            <ul className="footer__links">
+              {navLinks.map((link, index) => (
+                <li key={index}>
+                  <Link href={normalizeHref(link.link)}>{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="footer__col">
+            <p className="footer__navhead">Contact</p>
+            <ul className="footer__links">
+              <li>
+                <a href="tel:+15642433504">(564) 243-3504</a>
+              </li>
+              <li>
+                <a href="mailto:info@liberationlanguagelabs.org">
+                  info@liberationlanguagelabs.org
+                </a>
+              </li>
+              <li>
+                <span>Western Whatcom County</span>
+              </li>
+              <li>
+                <span>Telehealth across Washington</span>
+              </li>
+            </ul>
           </div>
         </div>
-        <div className="copyright_widget text-center">
-          <p className="copyright_text">
-            {copyright} | <Link href="/principles">Guiding Principles</Link>
-          </p>
+
+        <div className="wrap footer__base">
+          <span className="footer__c">{copyright}</span>
           {designerText && (
-            <p className="copyright_text m-0">
-              Website designed by{' '}
-              <a href={designerLink} target="_blank" rel="noopener noreferrer">
-                {designerText}
-              </a>
-            </p>
+            <a
+              className="footer__credit-link"
+              href={designerLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Website designed by <strong>{designerText}</strong>
+            </a>
           )}
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div>
   )
 }
 

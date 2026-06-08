@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
 import { getMedia } from '@/lib/media'
 
 interface NavLink {
@@ -30,81 +33,66 @@ const normalizeNavHref = (href: string) => {
 }
 
 const Header: React.FC<HeaderProps> = ({ logo, hotline, navLinks }) => {
-  // const [isSticky, setIsSticky] = useState(false)
   const getLogo = getMedia(logo)
-
-  // useEffect(() => {
-  //   const syncStickyState = () => {
-  //     setIsSticky(window.scrollY > 0)
-  //   }
-
-  //   syncStickyState()
-  //   window.addEventListener('scroll', syncStickyState)
-  //   window.addEventListener('pageshow', syncStickyState)
-
-  //   return () => {
-  //     window.removeEventListener('scroll', syncStickyState)
-  //     window.removeEventListener('pageshow', syncStickyState)
-  //   }
-  // }, [])
+  const [open, setOpen] = useState(false)
 
   return (
-    <header className="site_header">
-      <div className="container">
-        <div className="d-flex align-items-center gap-4">
-          <div className="site_logo">
-            <Link className="site_link" href="/">
-              <img
-                src={getLogo.url || '/assets/images/site_logo/site_logo_primary.png'}
-                alt={
-                  getLogo.alt ||
-                  'Site Logo – Liberation Language Labs – Psychotherapist Site Template'
-                }
-              />
-            </Link>
-          </div>
-          <div className="flex-grow-1">
-            <nav className="main_menu navbar navbar-expand-lg">
-              <div
-                className="main_menu_inner collapse navbar-collapse justify-content-center"
-                id="main_menu_dropdown"
-              >
-                <ul className="main_menu_list unordered_list">
-                  {navLinks.map((link, index) => (
-                    <li key={index}>
-                      <Link className="nav-link" href={normalizeNavHref(link.link)}>
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </nav>
-          </div>
-          <ul className="header_btns_group unordered_list justify-content-end">
-            <li>
-              <button
-                className="mobile_menu_btn"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#main_menu_dropdown"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <i className="far fa-bars"></i>
-              </button>
+    <header className="ll-root site-nav">
+      <nav className="nav__inner" aria-label="Primary">
+        <Link className="nav__logo" href="/" aria-label="Liberation Language Labs — home">
+          <img
+            src={getLogo.url || '/assets/images/site_logo/site_logo_primary.png'}
+            alt={getLogo.alt || 'Liberation Language Labs'}
+          />
+        </Link>
+
+        <ul className={`nav__links${open ? ' open' : ''}`} id="navlinks">
+          {navLinks.map((link, index) => (
+            <li key={index}>
+              <Link href={normalizeNavHref(link.link)} onClick={() => setOpen(false)}>
+                {link.label}
+              </Link>
             </li>
-            <li>
-              <a className="btn_hotline" href={hotline.link}>
-                <span className="btn_icon">
-                  <i className="fa-solid fa-phone"></i>
-                </span>
-                <span className="btn_text">{hotline.number}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+          ))}
+        </ul>
+
+        {hotline?.number && (
+          <a className="nav__phone" href={hotline.link}>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.6 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .6 3.6 1 1 0 0 1-.25 1z" />
+            </svg>
+            {hotline.number}
+          </a>
+        )}
+
+        <button
+          className="burger"
+          type="button"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+          aria-controls="navlinks"
+          onClick={() => setOpen((v) => !v)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+      </nav>
     </header>
   )
 }

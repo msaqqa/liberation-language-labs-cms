@@ -51,6 +51,9 @@ export const Blogs: CollectionConfig = {
       type: 'text',
       required: true,
       label: 'Title',
+      admin: {
+        description: 'Post title. The URL slug is generated from this automatically.',
+      },
     },
     {
       name: 'slug',
@@ -68,7 +71,8 @@ export const Blogs: CollectionConfig = {
       required: true,
       label: 'Description',
       admin: {
-        description: 'Short description of the blog',
+        description:
+          'One or two sentences (max ~160 characters). Shown on blog cards and used as the search/social preview.',
       },
     },
     {
@@ -76,6 +80,9 @@ export const Blogs: CollectionConfig = {
       type: 'richText',
       required: true,
       label: 'Details',
+      admin: {
+        description: 'Full article body. Use headings and lists to break up long sections.',
+      },
     },
     {
       name: 'image',
@@ -83,6 +90,9 @@ export const Blogs: CollectionConfig = {
       relationTo: 'media',
       required: true,
       label: 'Image',
+      admin: {
+        description: 'Featured image, landscape 4:3, ≥1200px wide, under ~300 KB.',
+      },
     },
     {
       name: 'publishedDate',
@@ -90,6 +100,9 @@ export const Blogs: CollectionConfig = {
       required: true,
       label: 'Published Date',
       defaultValue: () => new Date().toISOString().split('T')[0],
+      admin: {
+        description: 'Date shown on the post and used to sort the blog list (newest first).',
+      },
     },
     {
       name: 'published',

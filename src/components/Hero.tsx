@@ -12,17 +12,38 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ title, backgroundImage }) => {
-  const getBackgroundImage = getMedia(backgroundImage)
+  const heroImage = getMedia(backgroundImage)
+
   return (
-    <section className="hero_section decoration_wrapper" id="home">
-      <div className="hero_content_wrap">
-        <img
-          className="hero_bg_img"
-          src={getBackgroundImage.url || '/assets/images/hero/hero.png'}
-          alt={getBackgroundImage.alt || 'Speech therapy that affirms'}
-        />
-        <div className="hero_text_overlay">
-          <h1 className="heading_text">{title}</h1>
+    <section className="hero" id="home" aria-labelledby="hero-h">
+      <img
+        className="hero__bg"
+        src={heroImage.url || '/assets/images/hero/hero.png'}
+        alt={
+          heroImage.alt ||
+          'Two pairs of hands, adult and child, cradling soil and a young green seedling.'
+        }
+        fetchPriority="high"
+      />
+      <span className="hero__scrim" aria-hidden="true"></span>
+      <div className="wrap hero__inner">
+        <div className="hero__content">
+          <p className="eyebrow reveal">Whatcom County &amp; WA telehealth</p>
+          <h1 className="display-hero reveal d1" id="hero-h">
+            {title}
+          </h1>
+          <p className="hero__sub reveal d2">
+            Neurodiversity-affirming, collaborative speech-language care — built around what each
+            client wants, needs, and feels.
+          </p>
+          <div className="hero__cta reveal d3">
+            <a className="btn btn-primary" href="#speech_therapy">
+              How therapy works{' '}
+              <span className="arr" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </div>
         </div>
       </div>
     </section>

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(grep -oE \"[^{}]{1,60}\\\\{[^}]*overflow-x: ?hidden[^}]*\\\\}\" public/assets/css/style.min.css)",
+      "Bash(grep -oE \"^[^{]{1,60}\")",
+      "Bash(grep -oE \"[^{}]{1,40}\\\\{[^}]*overflow: ?hidden[^}]*\\\\}\" public/assets/css/style.min.css)",
+      "Bash(grep -oE \"^[^{]{1,40}\")",
+      "Bash(grep -oE \"\\(^|[,}]\\)\\\\.nav\\\\{[^}]*\\\\}\" node_modules/bootstrap/dist/css/bootstrap.min.css)",
+      "Bash(powershell -NoProfile -Command \"\\(Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Measure-Object\\).Count\")"
+    ]
+  }
+}

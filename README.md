@@ -4,10 +4,11 @@ Production-ready Next.js + Payload CMS project for the Liberation Language Labs 
 
 This repository includes:
 
-- A public marketing website (home, principles, blog, blog details)
+- A public marketing website (home, principles, blog list, blog details)
 - A Payload admin panel for content management
 - PostgreSQL-backed CMS data
 - S3-compatible media storage
+- Scheduled keep-alive endpoint support for hosted environments
 
 ## Tech Stack
 
@@ -17,6 +18,7 @@ This repository includes:
 - Payload CMS 3
 - PostgreSQL (`@payloadcms/db-postgres`)
 - S3-compatible object storage (`@payloadcms/storage-s3`)
+- Nodemailer email adapter (`@payloadcms/email-nodemailer`)
 - Bootstrap 5 (UI interactions)
 
 ## Key Features
@@ -26,22 +28,33 @@ This repository includes:
   - Footer
   - Home Page sections
   - Principles Page content
-- Blog collection with automatic slug generation
+- Blog collection with automatic slug generation + publish controls
 - Authenticated admin users (`users` collection)
 - Public REST and GraphQL APIs via Payload Next routes
 - Rich text editing via Lexical
 - External media hosting through S3-compatible storage
+- Route-level revalidation hooks on blog create/update/delete
+- Frontend keep-alive endpoint (`/api/keep-alive`)
 
 ## Project Structure (High Level)
 
 ```text
 src/
+  components/              # Frontend UI sections/components
   app/
     (frontend)/            # Public website routes
+      api/keep-alive/      # Warm-up endpoint used by scheduler
+      blog/[slug]/         # Blog detail route
     (payload)/             # Admin + Payload API routes
+      admin/               # Payload admin entry routes
+      api/graphql/         # GraphQL endpoint
+      api/graphql-playground/
   collections/             # Payload collections (Users, Media, Blogs)
   globals/                 # Payload globals (Header, Footer, Home, Principles)
+  lib/                     # Shared frontend/cms utilities
   payload.config.ts        # Payload CMS configuration
+next.config.ts             # Next config (withPayload + image host patterns)
+vercel.json                # Cron schedule for keep-alive route
 public/
   assets/                  # Static theme assets (css, js, images, fonts)
 ```
@@ -60,6 +73,7 @@ Create a `.env` file in the project root with at least the following values:
 ```bash
 NODE_ENV=development
 SERVER_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 PAYLOAD_SECRET=replace-with-a-strong-random-secret
 
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB_NAME
@@ -82,6 +96,7 @@ SMTP_PASS=your-smtp-password
 Notes:
 
 - `SERVER_URL` is used for Payload server URL and CSRF origin handling.
+- `NEXT_PUBLIC_SITE_URL` is used for metadata/open graph URLs in frontend layout.
 - `Media` collection uses `disableLocalStorage: true`, so S3 settings are required for uploads.
 - If SMTP variables are not set, Payload will use a Nodemailer test transport in development, and production password-reset email delivery will not be guaranteed.
 
@@ -125,6 +140,7 @@ First-time admin access:
 - `/principles` - Principles page
 - `/blog` - Blog listing
 - `/blog/[slug]` - Blog detail page
+- `/not-found` - Custom not found page UI
 
 ## CMS API Endpoints
 
@@ -132,26 +148,33 @@ First-time admin access:
 - `/api/graphql` - GraphQL endpoint
 - `/api/graphql-playground` - GraphQL playground
 
+## Operational Endpoint
+
+- `/api/keep-alive` - Lightweight Payload query endpoint used by scheduled pings (configured in `vercel.json`)
+
 ## Content Model Summary
 
 Collections:
 
 - `users` - Admin authentication
 - `media` - Media uploads (S3-backed)
-- `blogs` - Blog posts with generated slug + publish controls
+- `blogs` - Blog posts with generated slug, rich-text details, publish controls, and featured image
 
 Globals:
 
 - `header` - Logo, hotline, nav links
 - `footer` - Logo, nav links, copyright/designer fields
-- `home-page` - Home sections (hero, about, services, pricing, contact)
+- `home-page` - Home sections (hero, about, speech therapy, services, pricing, contact)
 - `principles-page` - Principles page banner and rich text sections
 
 ## Deployment Notes
 
 - Ensure all environment variables above are configured in your hosting platform.
 - Set `SERVER_URL` to the public application URL in production.
+- Set `NEXT_PUBLIC_SITE_URL` to the public frontend URL in production.
 - Confirm S3 bucket permissions and `S3_PUBLIC_URL` are correctly configured for media rendering.
+- If S3 public host changes, update `images.remotePatterns` in `next.config.ts` to allow Next Image optimization.
+- If deployed on Vercel, keep `vercel.json` cron entry enabled for periodic keep-alive pings.
 
 ## Maintenance Notes
 

@@ -54,6 +54,19 @@ export default buildConfig({
   serverURL: process.env.SERVER_URL,
   admin: {
     user: Users.slug,
+    // Theme left unset → native light/dark toggle stays intact. The HUD reskin
+    // (custom.scss) adapts to both modes.
+    meta: {
+      titleSuffix: '· Liberation Labs',
+      description: 'Liberation Language Labs — content control panel',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          url: '/assets/images/site_logo/favourite_icon.svg',
+        },
+      ],
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },
@@ -61,6 +74,12 @@ export default buildConfig({
       graphics: {
         Logo: '/components/Graphics#Logo',
         Icon: '/components/Graphics#Icon',
+      },
+      views: {
+        // Bespoke HUD dashboard replacing Payload's default view
+        dashboard: {
+          Component: '/components/admin/Dashboard#Dashboard',
+        },
       },
     },
   },

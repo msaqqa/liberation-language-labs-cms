@@ -42,48 +42,32 @@ export async function BlogSection() {
   const blogs = await fetchBlogs()
 
   return (
-    <section className="blog_section section_space_lg bg_primary_light">
-      <div className="container">
-        <div className="section_heading">
-          <div className="row align-items-center">
-            <div className="col-md-6">
-              <h2 className="section_heading_text mb-0">Labs Blog</h2>
-            </div>
-            <div className="col-md-6 d-none d-md-flex justify-content-end">
-              <Link className="btn btn-primary" href="/blog">
-                <span className="btn_text" data-text="Read More">
-                  Read More
-                </span>
-                <span className="btn_icon">
-                  <i className="fa-solid fa-arrow-up-right"></i>
-                </span>
-              </Link>
-            </div>
+    <section className="section band--subtle" id="blog" aria-labelledby="blog-h">
+      <div className="wrap">
+        <div className="sec-head split">
+          <div>
+            <p className="eyebrow">Labs Blog</p>
+            <h2 className="display-lg" id="blog-h">
+              Notes from the practice.
+            </h2>
           </div>
-        </div>
-
-        {blogs.length === 0 ? (
-          <div className="row justify-content-center">
-            <div className="col-12 text-center">No blogs found</div>
-          </div>
-        ) : (
-          <div className="row justify-content-center">
-            {blogs.map((blog) => (
-              <div className="col-12 col-md-6 col-lg-4" key={blog.id}>
-                <BlogCard {...blog} />
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="d-md-none text-center mt-4">
-          <Link className="btn btn-primary" href="/blog">
-            <span className="btn_text">Read More</span>
-            <span className="btn_icon">
-              <i className="fa-solid fa-arrow-up-right"></i>
+          <Link className="btn-ghost" href="/blog">
+            All posts{' '}
+            <span className="arr" aria-hidden="true">
+              →
             </span>
           </Link>
         </div>
+
+        {blogs.length === 0 ? (
+          <p className="body-lg">No posts yet — check back soon.</p>
+        ) : (
+          <div className="bgrid">
+            {blogs.map((blog) => (
+              <BlogCard key={blog.id} {...blog} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

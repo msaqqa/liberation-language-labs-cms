@@ -10,38 +10,36 @@ interface AboutProps {
 
 const About: React.FC<AboutProps> = ({ title, subtitle, description, imageUrl }) => {
   return (
-    <section className="about_section section_space_lg bg_primary_light" id="about">
-      <div className="container">
-        <div className="row align-items-center justify-content-lg-between">
-          <div className="col-lg-6 order-lg-last">
-            <div className="image_widget">
+    <section className="section band--subtle" id="about" aria-labelledby="about-h">
+      <div className="wrap about__grid">
+        <div className="about__media reveal">
+          <div className="hud-frame">
+            <span className="br br-tl" aria-hidden="true"></span>
+            <span className="br br-tr" aria-hidden="true"></span>
+            <span className="br br-bl" aria-hidden="true"></span>
+            <span className="br br-br" aria-hidden="true"></span>
+            <figure className="photo" style={{ margin: 0 }}>
               <img
                 src={imageUrl || '/assets/images/about/about_image_1-min.jpeg'}
-                alt="About Image - Liberation Language Labs – Psychotherapist Site Template"
+                alt="Jessica Burchiel, founder and speech-language pathologist."
               />
-              <div className="image_shape bg_primary_light"></div>
-            </div>
+            </figure>
           </div>
-          <div className="col-lg-6">
-            <div className="about_content">
-              <div className="section_heading mb-4">
-                <h2 className="section_heading_text">
-                  <mark>{title}</mark>
-                  {subtitle && (
-                    <>
-                      <br />
-                      {subtitle}
-                    </>
-                  )}
-                </h2>
-                {description && typeof description === 'object' && (
-                  <div className="section_heading_description">
-                    <RichText data={description} />
-                  </div>
-                )}
-              </div>
+        </div>
+        <div className="about__body reveal d1">
+          <p className="eyebrow sec-head">Welcome to the labs</p>
+          <h2 className="display-lg" style={{ marginTop: '18px' }} id="about-h">
+            {title}
+          </h2>
+          <p className="about__lead">
+            {subtitle || 'Communication, treated as an experiment worth running together.'}
+          </p>
+          {description && typeof description === 'object' && (
+            <div className="about__prose">
+              <RichText data={description} />
             </div>
-          </div>
+          )}
+          <p className="about__sig">Jessica Burchiel · M.A., CCC-SLP · she/her</p>
         </div>
       </div>
     </section>

@@ -13,6 +13,10 @@ export const Media: CollectionConfig = {
       name: 'alt',
       type: 'text',
       required: true,
+      admin: {
+        description:
+          'Describe the image for screen readers and SEO. Be specific; skip “image of”. e.g. “Therapist and child playing with letter cards”.',
+      },
     },
   ],
   upload: {

@@ -160,6 +160,9 @@ export interface User {
  */
 export interface Media {
   id: number;
+  /**
+   * Describe the image for screen readers and SEO. Be specific; skip “image of”. e.g. “Therapist and child playing with letter cards”.
+   */
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -179,12 +182,18 @@ export interface Media {
  */
 export interface Blog {
   id: number;
+  /**
+   * Post title. The URL slug is generated from this automatically.
+   */
   title: string;
   slug: string;
   /**
-   * Short description of the blog
+   * One or two sentences (max ~160 characters). Shown on blog cards and used as the search/social preview.
    */
   description: string;
+  /**
+   * Full article body. Use headings and lists to break up long sections.
+   */
   details: {
     root: {
       type: string;
@@ -200,7 +209,13 @@ export interface Blog {
     };
     [k: string]: unknown;
   };
+  /**
+   * Featured image, landscape 4:3, ≥1200px wide, under ~300 KB.
+   */
   image: number | Media;
+  /**
+   * Date shown on the post and used to sort the blog list (newest first).
+   */
   publishedDate: string;
   published?: boolean | null;
   updatedAt: string;
@@ -385,14 +400,35 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
+  /**
+   * Header logo. Transparent PNG/SVG, roughly 200×60, under ~50 KB.
+   */
   logo: number | Media;
+  /**
+   * Phone call-to-action shown in the header.
+   */
   hotline: {
+    /**
+     * Number as displayed, e.g. (555) 123-4567.
+     */
     number: string;
+    /**
+     * Click target — use a tel: link, e.g. tel:+15551234567.
+     */
     link: string;
   };
+  /**
+   * Main navigation links, in order. Use #section for home-page anchors (e.g. #contact) or a path like /blog.
+   */
   navLinks?:
     | {
+        /**
+         * Link text shown in the menu.
+         */
         label: string;
+        /**
+         * Destination: /path, #section, or full URL.
+         */
         link: string;
         id?: string | null;
       }[]
@@ -406,16 +442,37 @@ export interface Header {
  */
 export interface Footer {
   id: number;
+  /**
+   * Footer logo. A light/white version reads best on the dark footer.
+   */
   logo: number | Media;
+  /**
+   * Footer navigation links, in order.
+   */
   navLinks?:
     | {
+        /**
+         * Link text.
+         */
         label: string;
+        /**
+         * Destination: /path, #section, or full URL.
+         */
         link: string;
         id?: string | null;
       }[]
     | null;
+  /**
+   * Copyright line, e.g. “© 2026 Liberation Language Labs”.
+   */
   copyright: string;
+  /**
+   * Optional credit text, e.g. “Designed by …”.
+   */
   designerText?: string | null;
+  /**
+   * Optional URL the credit text links to.
+   */
   designerLink?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -426,13 +483,34 @@ export interface Footer {
  */
 export interface HomePage {
   id: number;
+  /**
+   * The first thing visitors see. Keep it short, warm, and affirming.
+   */
   hero: {
+    /**
+     * Main headline overlaid on the hero image. Aim for 3–7 words.
+     */
     title: string;
+    /**
+     * Wide hero image, ≥1920×1080, under ~400 KB. Keep the subject toward the left — the headline overlays the right side.
+     */
     backgroundImage: number | Media;
   };
+  /**
+   * Introduces the practice and its approach.
+   */
   about: {
+    /**
+     * Section heading, e.g. “About the Labs”.
+     */
     title: string;
+    /**
+     * Optional short line shown above or below the title.
+     */
     subtitle?: string | null;
+    /**
+     * Two to three short paragraphs. Plain, affirming language reads best here.
+     */
     description: {
       root: {
         type: string;
@@ -448,27 +526,69 @@ export interface HomePage {
       };
       [k: string]: unknown;
     };
+    /**
+     * Portrait/lifestyle image, roughly square or 4:3, under ~300 KB.
+     */
     image: number | Media;
   };
+  /**
+   * Highlights the speech-therapy focus areas.
+   */
   speechTherapy: {
+    /**
+     * Section heading.
+     */
     title: string;
+    /**
+     * Optional 1–2 sentence intro under the heading.
+     */
     description?: string | null;
+    /**
+     * Each row is one focus area. 3–6 rows works best visually.
+     */
     items?:
       | {
+          /**
+           * Short label, 1–4 words.
+           */
           title: string;
+          /**
+           * One or two sentences describing this focus area.
+           */
           description: string;
           id?: string | null;
         }[]
       | null;
   };
+  /**
+   * Grouped lists of services offered.
+   */
   services: {
+    /**
+     * Section heading.
+     */
     title: string;
+    /**
+     * Optional intro under the heading.
+     */
     description?: string | null;
+    /**
+     * Each row is a service group (a column of related services).
+     */
     servicesLists?:
       | {
+          /**
+           * Heading for this group of services.
+           */
           listTitle: string;
+          /**
+           * Individual services listed under this group.
+           */
           listItems?:
             | {
+                /**
+                 * One service. Keep it to a short phrase.
+                 */
                 item: string;
                 id?: string | null;
               }[]
@@ -477,9 +597,21 @@ export interface HomePage {
         }[]
       | null;
   };
+  /**
+   * Pricing and payment details.
+   */
   pricing: {
+    /**
+     * Section heading.
+     */
     title: string;
+    /**
+     * Optional intro under the heading.
+     */
     description?: string | null;
+    /**
+     * Payment/insurance details. Use a bullet list for sliding-scale or accepted plans.
+     */
     paymentInfo?: {
       root: {
         type: string;
@@ -496,12 +628,33 @@ export interface HomePage {
       [k: string]: unknown;
     } | null;
   };
+  /**
+   * Contact details shown in the home page contact block. Leave a field blank to hide its card.
+   */
   contactInfo: {
+    /**
+     * Section heading, e.g. “Get in touch”.
+     */
     title: string;
+    /**
+     * Optional intro under the heading.
+     */
     description?: string | null;
+    /**
+     * Display format, e.g. (555) 123-4567.
+     */
     phone?: string | null;
+    /**
+     * Optional. Leave blank to hide the Fax card.
+     */
     fax?: string | null;
+    /**
+     * Public contact email, e.g. hello@liberationlabs.com.
+     */
     email?: string | null;
+    /**
+     * Single-line mailing address.
+     */
     address?: string | null;
   };
   updatedAt?: string | null;
@@ -513,11 +666,26 @@ export interface HomePage {
  */
 export interface PrinciplesPage {
   id: number;
+  /**
+   * Top banner of the Principles page.
+   */
   banner: {
+    /**
+     * Page banner heading.
+     */
     title: string;
   };
+  /**
+   * Opening statement of principles.
+   */
   statement: {
+    /**
+     * Section heading.
+     */
     title: string;
+    /**
+     * The statement body. Short paragraphs read best.
+     */
     content: {
       root: {
         type: string;
@@ -534,8 +702,17 @@ export interface PrinciplesPage {
       [k: string]: unknown;
     };
   };
+  /**
+   * Your commitment to clients.
+   */
   commitment: {
+    /**
+     * Section heading.
+     */
     title: string;
+    /**
+     * The commitment body.
+     */
     content: {
       root: {
         type: string;
@@ -552,14 +729,29 @@ export interface PrinciplesPage {
       [k: string]: unknown;
     };
   };
+  /**
+   * “What we strive for” — an optional heading, bullet list, and closing text.
+   */
   strive?: {
+    /**
+     * Optional section heading.
+     */
     title?: string | null;
+    /**
+     * Each row is one bullet point.
+     */
     list?:
       | {
+          /**
+           * A single bullet. Keep it to one line.
+           */
           item: string;
           id?: string | null;
         }[]
       | null;
+    /**
+     * Optional closing paragraph below the list.
+     */
     content?: {
       root: {
         type: string;

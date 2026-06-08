@@ -1,17 +1,31 @@
 import type { Metadata } from 'next'
-import { Open_Sans } from 'next/font/google'
+import { Open_Sans, Inter, JetBrains_Mono } from 'next/font/google'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ClientScripts from '@/components/ClientScripts'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './globals.css'
 
 const openSans = Open_Sans({
   subsets: ['latin'],
   variable: '--font-open-sans',
   weight: ['300', '400', '500', '600', '700', '800'],
   style: ['normal', 'italic'],
+})
+
+// New design system type families (CLAUDE.md §3)
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  weight: ['400', '500', '700', '800'],
 })
 
 export const metadata: Metadata = {
@@ -63,7 +77,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${openSans.variable} scroll-smooth`}
+      className={`${openSans.variable} ${inter.variable} ${jetbrainsMono.variable} scroll-smooth`}
       suppressHydrationWarning={true}
     >
       <head>

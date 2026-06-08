@@ -6,48 +6,47 @@ interface ServicesProps {
   servicesLists: { listTitle: string; listItems: { item: string }[] }[]
 }
 
+const CheckIcon = () => (
+  <span className="ck" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  </span>
+)
+
 const Services: React.FC<ServicesProps> = ({ title, description, servicesLists }) => {
   return (
-    <section
-      className="pricing_section section_space_lg bg_primary_light decoration_wrapper"
-      id="services"
-    >
-      <div className="container">
-        <div className="section_heading text-center">
-          <h2 className="section_heading_text">{title}</h2>
-          {description && <p className="section_heading_description">{description}</p>}
+    <section className="section band--subtle" id="services" aria-labelledby="services-h">
+      <div className="wrap">
+        <div className="sec-head">
+          <p className="eyebrow">Services</p>
+          <h2 className="display-lg" id="services-h">
+            {title}
+          </h2>
+          {description && <p className="body-lg">{description}</p>}
         </div>
-        <div className="row justify-content-center g-4">
+        <div className="serv-grid">
           {servicesLists.map((l, index) => (
-            <div className="col-12 col-md-6" key={index}>
-              <div className="pricing_item">
-                <h3 className="pricing_heading">{l.listTitle}</h3>
-                <ul className="info_list unordered_list_block">
-                  {l.listItems.map((i, index) => (
-                    <li key={index}>
-                      <span className="info_icon">
-                        <i className="fa-light fa-circle-check"></i>
-                      </span>
-                      <span className="info_text">{i.item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className={`panel${index % 2 === 1 ? ' panel--feature' : ''}`} key={index}>
+              <h3 className="h-lg">{l.listTitle}</h3>
+              <ul className="checklist">
+                {l.listItems.map((i, idx) => (
+                  <li key={idx}>
+                    <CheckIcon />
+                    {i.item}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
-      </div>
-      <div className="decoration_item shape_leaf_1">
-        <img
-          src="/assets/images/shapes/shape_leaf_right_top.svg"
-          alt="Shape Leaf - Liberation Language Labs"
-        />
-      </div>
-      <div className="decoration_item shape_leaf_2">
-        <img
-          src="/assets/images/shapes/shape_leaf_left_bottom.svg"
-          alt="Shape Leaf - Liberation Language Labs"
-        />
       </div>
     </section>
   )
