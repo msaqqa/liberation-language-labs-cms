@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BlogCard } from '@/components/BlogCard'
 
 const BLOGS_PER_PAGE = 6
-const BLOG_PLACEHOLDER_BG_COLOR = '#eef3f7'
+const BLOG_PLACEHOLDER_BG_COLOR = 'var(--soft)'
 
 interface Blog {
   id: string
@@ -31,34 +31,24 @@ interface InfiniteBlogListProps {
 }
 
 function BlogCardSkeleton() {
-  const skeletonStyle = {
+  const barStyle = {
     backgroundColor: BLOG_PLACEHOLDER_BG_COLOR,
-    borderRadius: '8px',
+    borderRadius: '4px',
   }
 
   return (
-    <div className="blog_item" aria-hidden="true">
-      <div className="blog_image">
-        <div className="ratio ratio-4x3 rounded" style={skeletonStyle}></div>
+    <article className="bcard" aria-hidden="true">
+      <div className="bcard__top">
+        <span className="stripes" aria-hidden="true"></span>
       </div>
-      <div className="blog_content">
-        <div className="mb-3">
-          <div style={{ ...skeletonStyle, height: '14px', width: '36%' }}></div>
-        </div>
-        <div className="mb-3">
-          <div style={{ ...skeletonStyle, height: '28px', width: '88%' }}></div>
-        </div>
-        <div className="mb-2">
-          <div style={{ ...skeletonStyle, height: '12px', width: '95%' }}></div>
-        </div>
-        <div className="mb-3">
-          <div style={{ ...skeletonStyle, height: '12px', width: '80%' }}></div>
-        </div>
-        <div>
-          <div style={{ ...skeletonStyle, height: '14px', width: '30%' }}></div>
-        </div>
+      <div className="bcard__body">
+        <div style={{ ...barStyle, height: '12px', width: '40%' }}></div>
+        <div style={{ ...barStyle, height: '20px', width: '85%' }}></div>
+        <div style={{ ...barStyle, height: '12px', width: '95%' }}></div>
+        <div style={{ ...barStyle, height: '12px', width: '70%' }}></div>
+        <div style={{ ...barStyle, height: '14px', width: '32%', marginTop: '4px' }}></div>
       </div>
-    </div>
+    </article>
   )
 }
 
@@ -141,24 +131,22 @@ export function InfiniteBlogList({
 
   return (
     <>
-      <div className="row">
+      <div className="bgrid">
         {blogs.map((blog) => (
-          <div className="col-12 col-md-6" key={blog.id}>
-            <BlogCard {...blog} />
-          </div>
+          <BlogCard key={blog.id} {...blog} />
         ))}
 
         {isLoading &&
-          skeletonItems.map((_, index) => (
-            <div className="col-12 col-md-6" key={`skeleton-${index}`}>
-              <BlogCardSkeleton />
-            </div>
-          ))}
+          skeletonItems.map((_, index) => <BlogCardSkeleton key={`skeleton-${index}`} />)}
       </div>
 
-      <div ref={sentinelRef} className="pt-4" aria-hidden="true" />
+      <div ref={sentinelRef} style={{ paddingTop: 16 }} aria-hidden="true" />
 
-      {error && <p className="text-danger text-center mt-4 mb-0">{error}</p>}
+      {error && (
+        <p className="body" style={{ textAlign: 'center', marginTop: 24, color: 'var(--error)' }}>
+          {error}
+        </p>
+      )}
     </>
   )
 }

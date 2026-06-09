@@ -1,6 +1,7 @@
-import Image from 'next/image'
 import Link from 'next/link'
-import { ArchiveWidget } from '@/components/ArchiveWidget'
+import Banner from '@/components/Banner'
+import { BlogSection } from '@/components/BlogSection'
+import { ShareBar } from '@/components/ShareBar'
 import { formatDate } from '@/lib/media'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 
@@ -17,6 +18,18 @@ interface Blog {
   details: any // RichText from Payload
 }
 
+interface RelatedBlog {
+  id: string
+  title: string
+  description: string
+  slug: string
+  publishedDate: string
+  image: {
+    url?: string
+    alt?: string
+  }
+}
+
 interface BlogNavigationItem {
   title: string
   slug: string
@@ -31,6 +44,25 @@ interface BlogDetailPageProps {
   params: Promise<{
     slug: string
   }>
+}
+
+// Estimate reading time from the Lexical rich-text tree (~200 wpm).
+function countWords(node: any): number {
+  if (!node || typeof node !== 'object') return 0
+  let count = 0
+  if (typeof node.text === 'string') {
+    count += node.text.trim().split(/\s+/).filter(Boolean).length
+  }
+  if (Array.isArray(node.children)) {
+    for (const child of node.children) count += countWords(child)
+  }
+  return count
+}
+
+function getReadingTime(details: any): number {
+  const root = details?.root ?? details
+  const words = countWords(root)
+  return Math.max(1, Math.round(words / 200))
 }
 
 async function fetchBlog(slug: string): Promise<Blog | null> {
@@ -91,154 +123,186 @@ async function fetchBlogNavigation(currentSlug: string): Promise<BlogNavigation>
   }
 }
 
+async function fetchRelatedBlogs(currentSlug: string): Promise<RelatedBlog[]> {
+  try {
+    const response = await fetch(
+      `${process.env.SERVER_URL}/api/blogs?limit=4&sort=-publishedDate&where[published][equals]=true`,
+      {
+        next: { revalidate: 3600 },
+      },
+    )
+
+    if (!response.ok) {
+      return []
+    }
+
+    const data = await response.json()
+    const blogs: RelatedBlog[] = Array.isArray(data.docs) ? data.docs : []
+    return blogs.filter((item) => item.slug !== currentSlug).slice(0, 3)
+  } catch (error) {
+    console.error('Failed to fetch related blogs:', error)
+    return []
+  }
+}
+
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params
   const blog = await fetchBlog(slug)
-  const navigation = blog ? await fetchBlogNavigation(blog.slug) : { previous: null, next: null }
 
-  return (
-    <>
-      {/* Page Banner */}
-      <section className="page_banner decoration_wrapper">
-        <div className="container">
-          <h1 className="page_title">{blog?.title || 'Blog Not Found'}</h1>
-          <ul className="breadcrumb_nav unordered_list justify-content-center justify-content-lg-start">
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/blog">Blog</Link>
-            </li>
-            <li>Blog Details</li>
-          </ul>
-        </div>
-        <div className="decoration_item shape_leaf_1">
-          <img src="/assets/images/shapes/shape_leaf_left.svg" alt="Shape Leaf" />
-        </div>
-        <div className="decoration_item shape_leaf_2">
-          <img src="/assets/images/shapes/shape_leaf_right.svg" alt="Shape Leaf" />
-        </div>
-      </section>
-
-      {!blog ? (
-        <section className="section_space_lg">
-          {/* Blog Not Found Section */}
-          <div className="container">
-            <div className="text-center">
-              <h4>The blog you're looking for doesn't exist.</h4>
-              <div className="my-5">
+  if (!blog) {
+    return (
+      <div className="ll-root">
+        <main id="main">
+          <Banner
+            id="art-h"
+            crumb={[{ label: 'Blog', href: '/blog' }, { label: 'Not found' }]}
+            title="This article doesn't exist."
+          />
+          <div className="section">
+            <div className="wrap">
+              <div className="art-missing">
+                <p className="body-lg">
+                  The post you&apos;re looking for may have moved or been unpublished.
+                </p>
                 <Link className="btn btn-primary" href="/blog">
-                  <span className="btn_text" data-text="Back to Blog">
-                    Back to Blogs
-                  </span>
-                  <span className="btn_icon">
-                    <i className="fa-solid fa-arrow-up-right"></i>
+                  Back to all posts{' '}
+                  <span className="arr" aria-hidden="true">
+                    →
                   </span>
                 </Link>
               </div>
             </div>
           </div>
-        </section>
-      ) : (
-        <section className="blog_details_section section_space_lg pb-0">
-          {/* Blog Details Section */}
-          <div className="container">
-            <div className="row">
-              {/* Main Content */}
-              <div className="col-lg-8">
-                {/* Featured Image */}
-                {blog?.image?.url && (
-                  <div className="details_image mb-4 ratio ratio-16x9">
-                    <Image
-                      src={blog.image.url}
-                      alt={blog.image.alt || blog.title}
-                      fill
-                      sizes="(max-width: 992px) 100vw, 66vw"
-                    />
-                  </div>
-                )}
+        </main>
+      </div>
+    )
+  }
 
-                {/* Blog Content */}
-                <div className="details_content">
-                  {/* Blog Meta */}
-                  <ul className="post_meta unordered_list mb-4">
-                    <li>
-                      <i className="fa-solid fa-calendar-days"></i>{' '}
-                      {blog?.publishedDate && formatDate(blog.publishedDate)}
-                    </li>
-                  </ul>
+  const [navigation, related] = await Promise.all([
+    fetchBlogNavigation(blog.slug),
+    fetchRelatedBlogs(blog.slug),
+  ])
 
-                  {/* Blog Body */}
-                  <div className="mb-4">
-                    {blog?.description && (
-                      <p className="lead mb-3">
-                        <strong>{blog.description}</strong>
-                      </p>
+  const readingTime = getReadingTime(blog.details)
+  const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/blog/${blog.slug}`
+
+  return (
+    <div className="ll-root">
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
+
+      <main id="main">
+        <article aria-labelledby="art-h">
+          {/* Article header */}
+          <Banner
+            id="art-h"
+            crumb={[{ label: 'Blog', href: '/blog' }, { label: blog.title }]}
+            title={blog.title}
+            description={blog.description}
+          />
+
+          {/* Media + body */}
+          <div className="section article-body">
+            <div className="wrap">
+              {/* Hero media */}
+              <div className="arthero">
+                <div className="hud-frame reveal">
+                  <span className="br br-tl" aria-hidden="true"></span>
+                  <span className="br br-tr" aria-hidden="true"></span>
+                  <span className="br br-bl" aria-hidden="true"></span>
+                  <span className="br br-br" aria-hidden="true"></span>
+                  <div className="arthero__panel">
+                    {blog.image?.url ? (
+                      <img src={blog.image.url} alt={blog.image.alt || blog.title} />
+                    ) : (
+                      <>
+                        <span className="stripes" aria-hidden="true"></span>
+                        <span className="glow" aria-hidden="true"></span>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <circle cx="12" cy="9" r="3" />
+                          <path d="M12 15v5M8.5 12.5a5 5 0 0 1 7 0M6 10a8 8 0 0 1 12 0" />
+                        </svg>
+                      </>
                     )}
-
-                    {/* Rich Text Content */}
-                    {blog?.details && typeof blog.details === 'object' && (
-                      <RichText data={blog.details} />
-                    )}
-                  </div>
-
-                  {/* Navigation */}
-                  <div className="my-5">
-                    <div className="prev_next_post_nav">
-                      {navigation.previous ? (
-                        <Link href={`/blog/${navigation.previous.slug}`}>
-                          <span className="item_icon">
-                            <i className="fa-solid fa-angle-left"></i>
-                          </span>
-                          <span className="item_content">
-                            <b>Previous</b>
-                            <small className="d-block">{navigation.previous.title}</small>
-                          </span>
-                        </Link>
-                      ) : (
-                        <Link href="#!" className="d-flex align-items-start opacity-50 pe-none">
-                          <span className="item_icon">
-                            <i className="fa-solid fa-angle-left"></i>
-                          </span>
-                          <span className="item_content">
-                            <b>Previous</b>
-                          </span>
-                        </Link>
-                      )}
-
-                      {navigation.next ? (
-                        <Link href={`/blog/${navigation.next.slug}`}>
-                          <span className="item_content text-end">
-                            <b>Next</b>
-                            <small className="d-block">{navigation.next.title}</small>
-                          </span>
-                          <span className="item_icon">
-                            <i className="fa-solid fa-angle-right"></i>
-                          </span>
-                        </Link>
-                      ) : (
-                        <Link href="#!" className="d-flex align-items-start opacity-50 pe-none">
-                          <span className="item_content text-end">
-                            <b>Next</b>
-                          </span>
-                          <span className="item_icon">
-                            <i className="fa-solid fa-angle-right"></i>
-                          </span>
-                        </Link>
-                      )}
-                    </div>
                   </div>
                 </div>
+                <time className="arthero__date" dateTime={blog.publishedDate}>
+                  {formatDate(blog.publishedDate)} · {readingTime} min read
+                </time>
               </div>
 
-              {/* Sidebar */}
-              <div className="col-lg-4">
-                <ArchiveWidget />
+              {/* Article body */}
+              <div className="prose">
+                {blog.details && typeof blog.details === 'object' && (
+                  <RichText data={blog.details} />
+                )}
               </div>
+
+              {/* Prev / Next */}
+              {(navigation.previous || navigation.next) && (
+                <nav className="postnav" aria-label="More articles">
+                  {navigation.previous ? (
+                    <Link
+                      className="postnav__item postnav__item--prev"
+                      href={`/blog/${navigation.previous.slug}`}
+                    >
+                      <span className="postnav__dir">
+                        <span className="arr" aria-hidden="true">
+                          ←
+                        </span>{' '}
+                        Previous
+                      </span>
+                      <span className="postnav__title">{navigation.previous.title}</span>
+                    </Link>
+                  ) : (
+                    <div aria-hidden="true" />
+                  )}
+                  {navigation.next ? (
+                    <Link
+                      className="postnav__item postnav__item--next"
+                      href={`/blog/${navigation.next.slug}`}
+                    >
+                      <span className="postnav__dir">
+                        Next{' '}
+                        <span className="arr" aria-hidden="true">
+                          →
+                        </span>
+                      </span>
+                      <span className="postnav__title">{navigation.next.title}</span>
+                    </Link>
+                  ) : (
+                    <div aria-hidden="true" />
+                  )}
+                </nav>
+              )}
+
+              {/* Share */}
+              <ShareBar url={postUrl} title={blog.title} />
             </div>
           </div>
-        </section>
-      )}
-    </>
+        </article>
+
+        {/* Related */}
+        {related.length > 0 && (
+          <BlogSection
+            posts={related}
+            eyebrow="Keep reading"
+            title="More from the labs."
+            headingId="related-h"
+            sectionId="related"
+            className="related"
+          />
+        )}
+      </main>
+    </div>
   )
 }

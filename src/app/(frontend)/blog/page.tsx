@@ -1,5 +1,5 @@
 import { InfiniteBlogList } from '@/components/InfiniteBlogList'
-import { ArchiveWidget } from '@/components/ArchiveWidget'
+import Banner from '@/components/Banner'
 import Link from 'next/link'
 
 const BLOGS_PER_PAGE = 6
@@ -63,56 +63,68 @@ export default async function BlogPage() {
   const { docs: blogs, page, hasNextPage } = await fetchBlogs(1)
 
   return (
-    <>
-      {/* Page Banner */}
-      <section className="page_banner decoration_wrapper">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-6">
-              <h1 className="page_title mb-0">Labs Blog</h1>
-            </div>
-            <div className="col-lg-6">
-              <ul className="breadcrumb_nav unordered_list justify-content-md-end justify-content-center">
-                <li>
-                  <Link href="/">Home</Link>
-                </li>
-                <li>Labs Blog</li>
-              </ul>
+    <div className="ll-root">
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
+
+      <main id="main">
+        {/* Page header */}
+        <Banner
+          id="blog-h"
+          crumb="Blog"
+          title={
+            <>
+              Notes from the <span className="acc-word">practice</span>.
+            </>
+          }
+          description="Neurodiversity-affirming perspectives on communication, therapy, and the families we work alongside — written between sessions."
+        />
+
+        {/* Blogs */}
+        <section className="section" aria-label="Articles">
+          <div className="wrap">
+            {blogs.length === 0 ? (
+              <p className="body-lg">No posts yet — check back soon.</p>
+            ) : (
+              <InfiniteBlogList
+                initialBlogs={blogs}
+                initialPage={page}
+                initialHasNextPage={hasNextPage}
+              />
+            )}
+          </div>
+        </section>
+
+        {/* Closing CTA */}
+        <section className="cta-band" aria-labelledby="cta-h">
+          <div className="wrap">
+            <div className="inner">
+              <p className="eyebrow" style={{ justifyContent: 'center' }}>
+                Have a question?
+              </p>
+              <h2 className="display-lg" id="cta-h">
+                Let&apos;s talk about your family.
+              </h2>
+              <p className="body-lg">
+                Reach out about availability, a consult, or whether the practice is a good fit —
+                there&apos;s no wrong question to start with.
+              </p>
+              <div className="cta">
+                <Link className="btn btn-primary" href="/#contact">
+                  Start a conversation{' '}
+                  <span className="arr" aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+                <Link className="btn btn-secondary" href="/#process">
+                  How therapy works
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="decoration_item shape_leaf_1">
-          <img src="/assets/images/shapes/shape_leaf_left.svg" alt="Shape Leaf" />
-        </div>
-        <div className="decoration_item shape_leaf_2">
-          <img src="/assets/images/shapes/shape_leaf_right.svg" alt="Shape Leaf" />
-        </div>
-      </section>
-
-      {/* Blog Section */}
-      <section className="blog_section section_space_lg">
-        <div className="container">
-          <div className="row">
-            {/* Main Content */}
-            <div className="col-lg-8">
-              {blogs.length === 0 ? (
-                <div className="text-center py-5">No blogs found</div>
-              ) : (
-                <InfiniteBlogList
-                  initialBlogs={blogs}
-                  initialPage={page}
-                  initialHasNextPage={hasNextPage}
-                />
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="col-lg-4">
-              <ArchiveWidget />
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+        </section>
+      </main>
+    </div>
   )
 }

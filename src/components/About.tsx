@@ -27,8 +27,8 @@ const About: React.FC<AboutProps> = ({ title, subtitle, description, imageUrl })
           </div>
         </div>
         <div className="about__body reveal d1">
-          <p className="eyebrow sec-head">Welcome to the labs</p>
-          <h2 className="display-lg" style={{ marginTop: '18px' }} id="about-h">
+          <p className="eyebrow">Welcome to the labs</p>
+          <h2 className="display-lg" id="about-h">
             {title}
           </h2>
           <p className="about__lead">

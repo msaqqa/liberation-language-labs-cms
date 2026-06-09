@@ -76,9 +76,9 @@
    §2 Surfaces — DARK (plum-tinted HUD). White ink on near-black violet.
    -------------------------------------------------------------------------- */
 html[data-theme='dark'] {
-  /* Sentry solid-violet ramp: surface-canvas-dark #1f1633 base, monotonic lift.
+  /* Sentry solid-violet ramp: surface-canvas-dark #1b1622 base, monotonic lift.
      One uniform canvas — no radial glow, no gradients (body + sidebar share it). */
-  --theme-elevation-0: #1f1633; /* page background (--theme-bg) — Sentry canvas-dark */
+  --theme-elevation-0: #1b1622; /* page background (--theme-bg) — Sentry canvas-dark */
   --theme-elevation-50: #150f23; /* inputs / sunken / panel — Sentry surface-night */
   --theme-elevation-100: #2a2044; /* cards — lifted off the canvas */
   --theme-elevation-150: #362d59; /* borders / dividers — Sentry hairline-violet */
@@ -100,7 +100,7 @@ html[data-theme='dark'] {
   --theme-elevation-950: #ffffff;
   --theme-elevation-1000: #ffffff;
 
-  --theme-bg: #1f1633;
+  --theme-bg: #1b1622;
   --theme-input-bg: #150f23;
   --theme-text: #ffffff;
   --theme-border-color: rgba(255, 255, 255, 0.09);
@@ -134,7 +134,7 @@ html[data-theme='light'] {
   --hud-grid-line: rgba(41, 48, 57, 0.04);
 }
 
-/* §6 Surface: flat solid canvas in both polarities (dark: Sentry #1f1633,
+/* §6 Surface: flat solid canvas in both polarities (dark: Sentry #1b1622,
    light: #ffffff). The atmospheric radial glow is disabled (--hud-tint:transparent). */
 body {
   background-color: var(--theme-bg);
@@ -181,7 +181,9 @@ select:focus-visible {
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  box-shadow: var(--shadow-1), 0 6px 18px var(--glow);
+  box-shadow:
+    var(--shadow-1),
+    0 6px 18px var(--glow);
 }
 .btn--style-primary:active {
   --bg-color: var(--acc-deep);
@@ -203,7 +205,7 @@ a:not(.btn):hover {
   height: 100dvh;
   overflow: hidden;
   /* Solid, uniform canvas — shares the exact body background in both polarities
-     (dark: Sentry #1f1633, light: #ffffff). No gradient, no grid texture. */
+     (dark: Sentry #1b1622, light: #ffffff). No gradient, no grid texture. */
   background: var(--theme-bg);
   border-right: 1px solid var(--theme-border-color);
 }

@@ -93,6 +93,13 @@ html {
   scroll-padding-top: var(--nav-h);
 }
 
+/* Scroll-to-top button — brand teal (overrides the legacy --bs-secondary fill).
+   `.page_wrapper` (the <body> class) raises specificity above the legacy
+   `.backtotop .scroll` rule regardless of stylesheet load order. */
+.page_wrapper .backtotop .scroll {
+  background-color: var(--teal);
+}
+
 /* dark plum-tinted HUD polarity — applied to the footer element */
 .ll-root.polarity-dark {
   --bg: #0d0a12;
@@ -562,7 +569,10 @@ html {
     width: auto;
     margin-top: 0;
   }
-  .sec-head .eyebrow {
+  /* Single source of truth for the eyebrow→heading gap. About isn't a
+     `.sec-head` block, so it's included here to keep the gap uniform. */
+  .sec-head .eyebrow,
+  .about__body .eyebrow {
     margin-bottom: 18px;
   }
   .sec-head p {
@@ -1068,6 +1078,449 @@ html {
     flex: 1;
     font-size: 0.9375rem;
   }
+  .bcard__metarow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .bcard__metarow .d {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .bcard__cat {
+    font-family: var(--f-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--acc-text);
+  }
+
+  /* ---------- Page header band + breadcrumb (blogs.html / blog-details.html) ---------- */
+  .pagehead {
+    padding: var(--sp-64) 0 var(--sp-48);
+  }
+  .crumb {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 22px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+  .crumb a {
+    color: var(--muted);
+    transition: color 0.15s;
+  }
+  .crumb a:hover {
+    color: var(--acc-text);
+  }
+  .crumb .sep {
+    opacity: 0.5;
+  }
+  .crumb .here {
+    color: var(--acc-text);
+  }
+  .pagehead h1 {
+    margin: 16px 0 0;
+  }
+  .pagehead p {
+    margin: 18px 0 0;
+    max-width: 560px;
+  }
+
+  /* closing CTA — same subtle band as the page header */
+  .cta-band {
+    position: relative;
+    background: var(--subtle);
+  }
+  .cta-band .inner {
+    text-align: center;
+    padding: var(--sp-section) 0;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .cta-band h2 {
+    margin: 18px 0 0;
+    color: var(--txt);
+  }
+  .cta-band p {
+    margin: 16px auto 0;
+    color: var(--txt2);
+    line-height: 1.7;
+    max-width: 48ch;
+  }
+  .cta-band .cta {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+
+  /* ---------- Blog article page (blog-details.html) ---------- */
+  /* article header reuses the shared Banner (.pagehead band) */
+
+  /* media + body share one padded section; the flex column sets the
+     vertical rhythm between media, prose, post-nav and share. */
+  .article-body {
+    padding: var(--sp-section) 0;
+  }
+  .article-body .wrap {
+    max-width: 980px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-48);
+  }
+
+  /* hero media frame */
+  .arthero {
+    width: 100%;
+  }
+  .arthero__panel {
+    position: relative;
+    min-height: 380px;
+    display: grid;
+    place-items: center;
+    background: #1b1622;
+    overflow: hidden;
+    border-radius: var(--r-xxl);
+  }
+  .arthero__panel img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .arthero__panel .stripes {
+    position: absolute;
+    inset: 0;
+    opacity: 0.6;
+    background: repeating-linear-gradient(
+      135deg,
+      transparent 0 15px,
+      rgba(207, 134, 230, 0.1) 15px 16px
+    );
+  }
+  .arthero__panel .glow {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    filter: blur(120px);
+    background: radial-gradient(circle, rgba(155, 66, 182, 0.5), transparent 65%);
+    top: -160px;
+    right: -120px;
+    pointer-events: none;
+  }
+  .arthero__panel svg {
+    width: 72px;
+    height: 72px;
+    color: #cf86e6;
+    position: relative;
+    z-index: 1;
+  }
+  .arthero__date {
+    display: block;
+    margin-top: 18px;
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* prose reading column */
+  .prose {
+    width: 100%;
+    max-width: 720px;
+  }
+  .prose > * + * {
+    margin-top: 24px;
+  }
+  .prose p {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: var(--txt2);
+  }
+  .prose > p:first-of-type::first-letter {
+    float: left;
+    font-family: var(--f-sans);
+    font-weight: 900;
+    font-size: 3.4rem;
+    line-height: 0.82;
+    padding: 6px 12px 0 0;
+    color: var(--acc);
+  }
+  .prose h2 {
+    font-size: 1.625rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--txt);
+    font-weight: 800;
+    margin-top: 48px;
+  }
+  .prose h3 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    color: var(--txt);
+    font-weight: 700;
+    margin-top: 36px;
+  }
+  .prose h2 + p,
+  .prose h3 + p {
+    margin-top: 14px;
+  }
+  .prose ul,
+  .prose ol {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .prose ul li,
+  .prose ol li {
+    position: relative;
+    padding: 10px 0 10px 30px;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--txt2);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .prose ul li::before,
+  .prose ol li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 19px;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--acc);
+    transform: rotate(45deg);
+  }
+  .prose strong {
+    color: var(--txt);
+    font-weight: 700;
+  }
+  .prose a {
+    color: var(--acc-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+    font-weight: 600;
+    transition: color 0.18s;
+  }
+  .prose a:hover {
+    color: var(--teal);
+  }
+  /* authored blockquote → pull quote */
+  .prose blockquote,
+  .pullquote {
+    margin: 48px 0;
+    padding: 0 0 0 32px;
+    border-left: 3px solid var(--acc);
+  }
+  .prose blockquote p,
+  .pullquote p {
+    font-size: 1.5rem;
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--txt);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  /* prev / next post navigation */
+  .postnav {
+    width: 100%;
+    max-width: 720px;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .postnav__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    background: var(--panel);
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.2s,
+      border-color 0.2s;
+    min-height: 96px;
+  }
+  .postnav__item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--e2);
+    border-color: color-mix(in srgb, var(--acc) 30%, var(--line));
+  }
+  .postnav__item--next {
+    text-align: right;
+    align-items: flex-end;
+  }
+  .postnav__dir {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--acc-text);
+  }
+  .postnav__item .arr {
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  .postnav__item--prev:hover .arr {
+    transform: translateX(-4px);
+  }
+  .postnav__item--next:hover .arr {
+    transform: translateX(4px);
+  }
+  .postnav__title {
+    font-weight: 700;
+    font-size: 1.0625rem;
+    line-height: 1.35;
+    color: var(--txt);
+    letter-spacing: -0.01em;
+  }
+
+  /* share — modern, centered */
+  .share {
+    width: 100%;
+    max-width: 720px;
+    margin: 0;
+    padding: var(--sp-48) 0 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+  }
+  .share .lbl {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .share__btns {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .share a,
+  .share button.share__copy {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-full);
+    border: 1px solid var(--line);
+    background: var(--panel);
+    display: grid;
+    place-items: center;
+    color: var(--txt2);
+    cursor: pointer;
+    transition:
+      color 0.18s,
+      border-color 0.18s,
+      background 0.18s,
+      transform 0.18s,
+      box-shadow 0.18s;
+  }
+  .share a:hover,
+  .share button.share__copy:hover {
+    color: #fff;
+    background: var(--acc);
+    border-color: var(--acc);
+    transform: translateY(-3px);
+    box-shadow: var(--e2);
+  }
+  .share a svg,
+  .share button.share__copy svg {
+    width: 19px;
+    height: 19px;
+  }
+  .share__copy {
+    position: relative;
+  }
+  .share__toast {
+    position: absolute;
+    top: -38px;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    opacity: 0;
+    pointer-events: none;
+    font-family: var(--f-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--acc-deep);
+    padding: 6px 10px;
+    border-radius: var(--r-sm);
+    white-space: nowrap;
+    transition:
+      opacity 0.2s,
+      transform 0.2s;
+  }
+  .share__copy.copied .share__toast {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* related posts */
+  .related .sec-head {
+    margin-bottom: 32px;
+  }
+
+  /* article not found */
+  .art-missing {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+    padding: var(--sp-section) 0;
+  }
+  .art-missing p {
+    margin: 16px 0 28px;
+    color: var(--txt2);
+  }
+
+  @media (max-width: 680px) {
+    .arthero__panel {
+      min-height: 260px;
+    }
+    .prose > p:first-of-type::first-letter {
+      font-size: 2.8rem;
+    }
+    .prose blockquote p,
+    .pullquote p {
+      font-size: 1.25rem;
+    }
+    .postnav {
+      grid-template-columns: 1fr;
+    }
+  }
 
   /* ---------- Contact ---------- */
   .contact-grid {
@@ -1387,6 +1840,9 @@ html {
     }
     .burger {
       display: inline-flex;
+      /* links/phone are hidden here, so push the burger to the far right
+         while the logo stays at the far left */
+      margin-left: auto;
     }
     .nav__logo img {
       height: 44px;

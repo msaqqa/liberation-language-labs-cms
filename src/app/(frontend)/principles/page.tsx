@@ -12,7 +12,7 @@ export default async function PrinciplesPage() {
   return (
     <>
       {/* Page Banner */}
-      <Banner title={data.banner.title} />
+      <Banner crumb={data.banner.title} title={data.banner.title} />
 
       {/* Page Content */}
       <section className="service_details_section section_space_lg">
