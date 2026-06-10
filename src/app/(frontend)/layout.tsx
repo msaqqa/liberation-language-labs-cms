@@ -4,8 +4,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import ClientScripts from '@/components/ClientScripts'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import BackToTop from '@/components/BackToTop'
 import './globals.css'
 
 const openSans = Open_Sans({
@@ -80,18 +79,8 @@ export default async function RootLayout({
       className={`${openSans.variable} ${inter.variable} ${jetbrainsMono.variable} scroll-smooth`}
       suppressHydrationWarning={true}
     >
-      <head>
-        {/* <!-- Font Awesome icon css--> */}
-        <link rel="stylesheet" href="/assets/css/fontawesome.min.css" media="screen" />
-        {/* <!-- Main style css --> */}
-        <link rel="stylesheet" href="/assets/css/style.min.css" media="screen" />
-      </head>
       <body className="page_wrapper" suppressHydrationWarning={true}>
-        <div className="backtotop">
-          <a href="#!" className="scroll">
-            <i className="fa-solid fa-arrow-up"></i>
-          </a>
-        </div>
+        <BackToTop />
         <Header
           logo={headerData.logo}
           hotline={headerData.hotline as any}
@@ -105,7 +94,6 @@ export default async function RootLayout({
           designerText={footerData.designerText as any}
           designerLink={footerData.designerLink as any}
         />
-        <ClientScripts />
       </body>
     </html>
   )

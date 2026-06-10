@@ -1,6 +1,6 @@
 import { InfiniteBlogList } from '@/components/InfiniteBlogList'
 import Banner from '@/components/Banner'
-import Link from 'next/link'
+import ClosingCta from '@/components/ClosingCta'
 
 const BLOGS_PER_PAGE = 6
 
@@ -97,33 +97,11 @@ export default async function BlogPage() {
         </section>
 
         {/* Closing CTA */}
-        <section className="cta-band" aria-labelledby="cta-h">
-          <div className="wrap">
-            <div className="inner">
-              <p className="eyebrow" style={{ justifyContent: 'center' }}>
-                Have a question?
-              </p>
-              <h2 className="display-lg" id="cta-h">
-                Let&apos;s talk about your family.
-              </h2>
-              <p className="body-lg">
-                Reach out about availability, a consult, or whether the practice is a good fit —
-                there&apos;s no wrong question to start with.
-              </p>
-              <div className="cta">
-                <Link className="btn btn-primary" href="/#contact">
-                  Start a conversation{' '}
-                  <span className="arr" aria-hidden="true">
-                    →
-                  </span>
-                </Link>
-                <Link className="btn btn-secondary" href="/#process">
-                  How therapy works
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        <ClosingCta
+          eyebrow="Have a question?"
+          description="Reach out about availability, a consult, or whether the practice is a good fit — there's no wrong question to start with."
+          secondary={{ label: 'How therapy works', href: '/#process' }}
+        />
       </main>
     </div>
   )

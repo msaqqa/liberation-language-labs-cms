@@ -34,8 +34,8 @@ const Footer: React.FC<FooterProps> = ({
             <Link href="/" aria-label="Liberation Language Labs — home">
               <img
                 className="footer__logo"
-                src={getLogo.url || '/assets/images/site_logo/site_logo_white.png'}
-                alt={getLogo.alt || 'Liberation Language Labs'}
+                src={'/assets/images/site_logo/site_logo_white.png'}
+                alt={'Liberation Language Labs'}
               />
             </Link>
             <p className="footer__principles-head">Guiding principles</p>
@@ -69,9 +69,7 @@ const Footer: React.FC<FooterProps> = ({
                 <a href="tel:+15642433504">(564) 243-3504</a>
               </li>
               <li>
-                <a href="mailto:info@liberationlanguagelabs.org">
-                  info@liberationlanguagelabs.org
-                </a>
+                <a href="mailto:info@liberationlanguagelabs.org">info@liberationlanguagelabs.org</a>
               </li>
               <li>
                 <span>Western Whatcom County</span>

@@ -62,6 +62,7 @@
   --amber: #f7ab1e;
   --ring: rgba(155, 66, 182, 0.55);
   --done: #22c55e;
+  --flight: #f7ab1e;
   --acc-text: var(--acc-deep);
   --r-xs: 4px;
   --r-sm: 6px;
@@ -73,6 +74,7 @@
   --sp-section: 96px;
   --sp-64: 64px;
   --sp-48: 48px;
+  --sp-xl: 24px;
   --e1: 0 1px 2px rgba(41, 48, 57, 0.06);
   --e2: 0 10px 30px rgba(155, 66, 182, 0.1);
   --e3: 0 20px 40px rgba(155, 66, 182, 0.18);
@@ -93,11 +95,51 @@ html {
   scroll-padding-top: var(--nav-h);
 }
 
-/* Scroll-to-top button — brand teal (overrides the legacy --bs-secondary fill).
-   `.page_wrapper` (the <body> class) raises specificity above the legacy
-   `.backtotop .scroll` rule regardless of stylesheet load order. */
-.page_wrapper .backtotop .scroll {
+/* Body reset — the retired template stylesheet used to zero the body margin.
+   Tailwind's preflight is intentionally not imported, so reset it here. */
+body {
+  margin: 0;
+}
+
+/* Back-to-top button — fixed brand-teal circle, bottom-right. Fully
+   self-contained (no longer inherits from the retired template stylesheet);
+   visibility is toggled by the BackToTop client component. */
+.backtotop {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 90;
+}
+.backtotop .scroll {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 9999px;
   background-color: var(--teal);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(41, 48, 57, 0.18);
+  transition:
+    background-color 0.18s,
+    transform 0.18s,
+    box-shadow 0.18s;
+}
+.backtotop .scroll:hover {
+  background-color: #348b8e;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(41, 48, 57, 0.22);
+}
+.backtotop .scroll:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .backtotop .scroll {
+    transition: none;
+  }
 }
 
 /* dark plum-tinted HUD polarity — applied to the footer element */
@@ -455,8 +497,8 @@ html {
     right: 0;
     z-index: 100;
     background: color-mix(in srgb, var(--bg) 82%, transparent);
-    backdrop-filter: saturate(1.4) blur(16px);
-    -webkit-backdrop-filter: saturate(1.4) blur(16px);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
     border-bottom: 1px solid var(--line-soft);
   }
   .nav__inner {
@@ -519,8 +561,8 @@ html {
     letter-spacing: 0.02em;
   }
   .nav__phone svg {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     color: var(--acc);
     flex: 0 0 auto;
   }
@@ -1165,6 +1207,288 @@ html {
     margin-top: 30px;
   }
 
+  /* ---------- Principles page (principles.html) ---------- */
+  .pgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .principle {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    background: var(--panel);
+    padding: 30px 28px 28px;
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.2s,
+      border-color 0.2s;
+  }
+  .principle:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--e2);
+    border-color: color-mix(in srgb, var(--acc) 30%, var(--line));
+  }
+  .principle__no {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: var(--acc-text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 16px;
+  }
+  .principle__no::after {
+    content: '';
+    height: 1px;
+    flex: 1;
+    background: var(--line-soft);
+  }
+  .principle h2 {
+    font-size: 1.3rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+    color: var(--txt);
+    font-weight: 700;
+  }
+  .principle p {
+    margin: 0;
+    color: var(--txt2);
+    line-height: 1.7;
+    font-size: 0.975rem;
+  }
+
+  /* land-acknowledgment — cinematic dark moment */
+  .statement {
+    position: relative;
+    overflow: hidden;
+    background: #0d0a12;
+  }
+  .statement .glow {
+    position: absolute;
+    width: 560px;
+    height: 560px;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+  }
+  .statement .glow.a {
+    background: radial-gradient(circle, rgba(155, 66, 182, 0.42), transparent 65%);
+    top: -280px;
+    left: -120px;
+  }
+  .statement .glow.b {
+    background: radial-gradient(circle, rgba(61, 117, 156, 0.24), transparent 65%);
+    bottom: -300px;
+    right: -120px;
+  }
+  .statement .inner {
+    position: relative;
+    z-index: 1;
+    padding: var(--sp-section) 0;
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .statement .eyebrow {
+    justify-content: center;
+  }
+  .statement h2 {
+    margin: 18px 0 0;
+    color: #fff;
+    font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+  }
+  .statement p {
+    margin: 22px auto 0;
+    color: var(--txt2);
+    line-height: 1.85;
+    font-size: 1.0625rem;
+    max-width: 60ch;
+  }
+  .statement .tribes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  .statement .tribe {
+    font-family: var(--f-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--r-full);
+    border: 1px solid color-mix(in srgb, var(--acc-soft) 55%, transparent);
+    background: color-mix(in srgb, var(--acc-soft) 14%, transparent);
+  }
+
+  /* ---------- 404 / Not-found page (404.html) ---------- */
+  .nf {
+    width: 100%;
+    padding: var(--sp-64) 0;
+    min-height: 64vh;
+    display: flex;
+    align-items: center;
+  }
+  .nf__inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* HUD corner-bracket numeral frame */
+  .nf__frame {
+    position: relative;
+    padding: 22px 34px;
+    margin-bottom: var(--sp-xl);
+  }
+  .nf__frame .br {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--acc);
+  }
+  .nf__frame .tl {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+  }
+  .nf__frame .tr {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+  }
+  .nf__frame .bl {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+  }
+  .nf__frame .br2 {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+  }
+  .nf p.nf__code {
+    font-weight: 900;
+    font-size: clamp(5rem, 15vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--txt);
+    margin: 0;
+    max-width: none;
+  }
+  .nf__code .acc-word {
+    color: var(--acc);
+  }
+  .nf__status {
+    margin-bottom: 26px;
+  }
+  .nf h1 {
+    margin: 0;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    letter-spacing: -0.02em;
+    color: var(--txt);
+    font-weight: 800;
+  }
+  .nf p {
+    margin: 18px 0 0;
+    max-width: 46ch;
+    color: var(--txt2);
+    line-height: 1.7;
+    font-size: 1.0625rem;
+  }
+  .nf__cta {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  /* helpful links rail */
+  .nf__links {
+    margin-top: var(--sp-48);
+    padding-top: 28px;
+    border-top: 1px solid var(--line-soft);
+    width: 100%;
+    max-width: 520px;
+  }
+  .nf__links .h {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 16px;
+    text-align: start;
+  }
+  .nf__links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .nf__links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--panel);
+    color: var(--txt);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition:
+      transform 0.18s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.18s,
+      border-color 0.18s,
+      color 0.18s;
+  }
+  .nf__links a .arr {
+    color: var(--acc-text);
+    transition: transform 0.18s;
+  }
+  .nf__links a:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--e2);
+    border-color: color-mix(in srgb, var(--acc) 30%, var(--line));
+    color: var(--acc-text);
+  }
+  .nf__links a:hover .arr {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 780px) {
+    .pgrid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .nf__links ul {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* ---------- Blog article page (blog-details.html) ---------- */
   /* article header reuses the shared Banner (.pagehead band) */
 
@@ -1402,7 +1726,7 @@ html {
     letter-spacing: -0.01em;
   }
 
-  /* share — modern, centered */
+  /* share — single trigger button (opens the share modal) */
   .share {
     width: 100%;
     max-width: 720px;
@@ -1410,83 +1734,139 @@ html {
     padding: var(--sp-48) 0 0;
     border-top: 1px solid var(--line);
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    text-align: center;
-  }
-  .share .lbl {
-    font-family: var(--f-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .share__btns {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
     justify-content: center;
   }
-  .share a,
-  .share button.share__copy {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--r-full);
-    border: 1px solid var(--line);
-    background: var(--panel);
+  .share__trigger svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* single-article navigation — centered "Back to Blogs" card
+     (reuses the prev/next .postnav__item styling) */
+  .postnav-back {
+    width: 100%;
+    max-width: 720px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .postnav-back .postnav__item {
+    width: 100%;
+    /* match one column of the 2-up prev/next grid: (720 - 16 gap) / 2 */
+    max-width: 352px;
+  }
+
+  /* share modal — accessible dialog with platform buttons */
+  .share-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
     display: grid;
     place-items: center;
+    padding: 24px;
+    background: rgba(13, 10, 18, 0.55);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+  .share-modal__panel {
+    width: 100%;
+    max-width: 420px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    box-shadow: var(--e3);
+    padding: 24px;
+    text-align: left;
+  }
+  .share-modal__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .share-modal__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--txt);
+    letter-spacing: -0.01em;
+  }
+  .share-modal__close {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--panel);
     color: var(--txt2);
     cursor: pointer;
     transition:
       color 0.18s,
       border-color 0.18s,
-      background 0.18s,
-      transform 0.18s,
-      box-shadow 0.18s;
+      background 0.18s;
   }
-  .share a:hover,
-  .share button.share__copy:hover {
-    color: #fff;
-    background: var(--acc);
-    border-color: var(--acc);
-    transform: translateY(-3px);
-    box-shadow: var(--e2);
+  .share-modal__close:hover {
+    color: var(--txt);
+    border-color: color-mix(in srgb, var(--acc) 40%, var(--line));
+    background: color-mix(in srgb, var(--acc) 6%, transparent);
   }
-  .share a svg,
-  .share button.share__copy svg {
-    width: 19px;
-    height: 19px;
+  .share-modal__close svg {
+    width: 18px;
+    height: 18px;
   }
-  .share__copy {
-    position: relative;
+  .share-modal__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
-  .share__toast {
-    position: absolute;
-    top: -38px;
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
-    opacity: 0;
-    pointer-events: none;
-    font-family: var(--f-mono);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #fff;
-    background: var(--acc-deep);
-    padding: 6px 10px;
-    border-radius: var(--r-sm);
-    white-space: nowrap;
+  .share-modal__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 0 16px;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--panel);
+    color: var(--txt);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-align: left;
+    cursor: pointer;
     transition:
-      opacity 0.2s,
-      transform 0.2s;
+      transform 0.18s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.18s,
+      border-color 0.18s,
+      color 0.18s;
   }
-  .share__copy.copied .share__toast {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+  .share-modal__item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--e2);
+    border-color: color-mix(in srgb, var(--acc) 30%, var(--line));
+    color: var(--acc-text);
+  }
+  .share-modal__item svg {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+  }
+  .share-modal__item--copy {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+  .share-modal__item--copy.copied {
+    color: var(--done);
+    border-color: color-mix(in srgb, var(--done) 45%, var(--line));
+  }
+  @media (max-width: 440px) {
+    .share-modal__grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* related posts */
@@ -1790,14 +2170,15 @@ html {
     .hero__scrim {
       background: linear-gradient(
         180deg,
-        rgba(13, 10, 18, 0.3) 0%,
-        rgba(13, 10, 18, 0.2) 30%,
-        rgba(13, 10, 18, 0.66) 72%,
-        rgba(13, 10, 18, 0.92) 100%
+        rgba(13, 10, 18, 0.35) 0%,
+        rgba(13, 10, 18, 0.28) 25%,
+        rgba(13, 10, 18, 0.6) 55%,
+        rgba(13, 10, 18, 0.86) 78%,
+        rgba(13, 10, 18, 0.96) 100%
       );
     }
     .hero__scrim::after {
-      background: radial-gradient(120% 70% at 50% 90%, rgba(94, 36, 115, 0.5), transparent 60%);
+      background: radial-gradient(120% 75% at 50% 92%, rgba(94, 36, 115, 0.5), transparent 62%);
     }
     .grid-4 {
       grid-template-columns: 1fr 1fr;
@@ -1852,6 +2233,24 @@ html {
     }
     .hero__inner {
       padding-block: 48px 84px;
+    }
+    /* Mobile: text sits at the bottom, so darken the lower half harder and
+       extend coverage upward so the scrim fully sits behind the hero copy. */
+    .hero__scrim {
+      background: linear-gradient(
+        180deg,
+        rgba(13, 10, 18, 0.4) 0%,
+        rgba(13, 10, 18, 0.45) 38%,
+        rgba(13, 10, 18, 0.78) 64%,
+        rgba(13, 10, 18, 0.94) 85%,
+        rgba(13, 10, 18, 0.99) 100%
+      );
+    }
+    .hero__scrim::after {
+      /* solid dark wash anchored to the bottom text area (replaces the plum
+         soft-light glow) for maximum contrast behind the hero copy */
+      background: linear-gradient(180deg, transparent 30%, rgba(13, 10, 18, 0.5) 100%);
+      mix-blend-mode: normal;
     }
     .nav__links.open {
       display: flex;

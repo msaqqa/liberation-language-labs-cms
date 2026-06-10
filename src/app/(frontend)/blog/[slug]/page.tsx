@@ -1,7 +1,8 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Banner from '@/components/Banner'
 import { BlogSection } from '@/components/BlogSection'
-import { ShareBar } from '@/components/ShareBar'
+import { ShareButton } from '@/components/ShareButton'
 import { formatDate } from '@/lib/media'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 
@@ -145,6 +146,43 @@ async function fetchRelatedBlogs(currentSlug: string): Promise<RelatedBlog[]> {
   }
 }
 
+// Per-article social metadata so a shared link renders as a rich post
+// (image + title + description) on Facebook, X, LinkedIn, WhatsApp, etc.
+// fetchBlog is deduped with the page's own call via Next's fetch cache.
+export async function generateMetadata({ params }: BlogDetailPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const blog = await fetchBlog(slug)
+
+  if (!blog) {
+    return { title: 'Article not found — Liberation Language Labs' }
+  }
+
+  const path = `/blog/${blog.slug}`
+  const imageUrl = blog.image?.url
+  const images = imageUrl ? [{ url: imageUrl, alt: blog.image?.alt || blog.title }] : undefined
+
+  return {
+    title: `${blog.title} — Liberation Language Labs`,
+    description: blog.description,
+    alternates: { canonical: path },
+    openGraph: {
+      type: 'article',
+      title: blog.title,
+      description: blog.description,
+      url: path,
+      siteName: 'Liberation Language Labs',
+      publishedTime: blog.publishedDate,
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: blog.title,
+      description: blog.description,
+      images: imageUrl ? [imageUrl] : undefined,
+    },
+  }
+}
+
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params
   const blog = await fetchBlog(slug)
@@ -247,8 +285,8 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                 )}
               </div>
 
-              {/* Prev / Next */}
-              {(navigation.previous || navigation.next) && (
+              {/* Prev / Next — or, for a single article, a centered "Back to Blogs" */}
+              {navigation.previous || navigation.next ? (
                 <nav className="postnav" aria-label="More articles">
                   {navigation.previous ? (
                     <Link
@@ -283,10 +321,22 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                     <div aria-hidden="true" />
                   )}
                 </nav>
+              ) : (
+                <div className="postnav-back">
+                  <Link className="postnav__item postnav__item--prev" href="/blog">
+                    <span className="postnav__dir">
+                      <span className="arr" aria-hidden="true">
+                        ←
+                      </span>{' '}
+                      Browse all
+                    </span>
+                    <span className="postnav__title">Back to Blogs</span>
+                  </Link>
+                </div>
               )}
 
               {/* Share */}
-              <ShareBar url={postUrl} title={blog.title} />
+              <ShareButton url={postUrl} title={blog.title} />
             </div>
           </div>
         </article>
