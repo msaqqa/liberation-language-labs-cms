@@ -1,6 +1,15 @@
+import type { Metadata } from 'next'
 import { InfiniteBlogList } from '@/components/InfiniteBlogList'
 import Banner from '@/components/Banner'
 import ClosingCta from '@/components/ClosingCta'
+import { buildMetadata } from '@/lib/seo'
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Blog — Liberation Language Labs',
+  description:
+    'Neurodiversity-affirming perspectives on communication, therapy, and family-centered care.',
+  path: '/blog',
+})
 
 const BLOGS_PER_PAGE = 6
 
@@ -100,7 +109,7 @@ export default async function BlogPage() {
         <ClosingCta
           eyebrow="Have a question?"
           description="Reach out about availability, a consult, or whether the practice is a good fit — there's no wrong question to start with."
-          secondary={{ label: 'How therapy works', href: '/#process' }}
+          secondary={{ label: 'How therapy works', href: '/#speech_therapy' }}
         />
       </main>
     </div>

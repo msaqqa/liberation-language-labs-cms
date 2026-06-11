@@ -496,7 +496,7 @@ body {
     left: 0;
     right: 0;
     z-index: 100;
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
     backdrop-filter: saturate(1.4) blur(14px);
     -webkit-backdrop-filter: saturate(1.4) blur(14px);
     border-bottom: 1px solid var(--line-soft);

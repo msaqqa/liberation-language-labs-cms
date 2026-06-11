@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Banner from '@/components/Banner'
 import { BlogSection } from '@/components/BlogSection'
-import { ShareButton } from '@/components/ShareButton'
+import { JsonLd } from '@/components/JsonLd'
 import { formatDate } from '@/lib/media'
+import { buildMetadata, toAbsoluteUrl } from '@/lib/seo'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 
 interface Blog {
@@ -154,33 +155,22 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
   const blog = await fetchBlog(slug)
 
   if (!blog) {
-    return { title: 'Article not found — Liberation Language Labs' }
+    return buildMetadata({
+      title: 'Article not found — Liberation Language Labs',
+      description: 'This article is not available.',
+      path: `/blog/${slug}`,
+      noindex: true,
+    })
   }
 
-  const path = `/blog/${blog.slug}`
-  const imageUrl = blog.image?.url
-  const images = imageUrl ? [{ url: imageUrl, alt: blog.image?.alt || blog.title }] : undefined
-
-  return {
+  return buildMetadata({
     title: `${blog.title} — Liberation Language Labs`,
     description: blog.description,
-    alternates: { canonical: path },
-    openGraph: {
-      type: 'article',
-      title: blog.title,
-      description: blog.description,
-      url: path,
-      siteName: 'Liberation Language Labs',
-      publishedTime: blog.publishedDate,
-      images,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: blog.title,
-      description: blog.description,
-      images: imageUrl ? [imageUrl] : undefined,
-    },
-  }
+    path: `/blog/${blog.slug}`,
+    image: blog.image?.url,
+    type: 'article',
+    publishedTime: blog.publishedDate,
+  })
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
@@ -222,10 +212,41 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   ])
 
   const readingTime = getReadingTime(blog.details)
-  const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/blog/${blog.slug}`
+  const canonicalUrl = toAbsoluteUrl(`/blog/${blog.slug}`)
+
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: blog.title,
+    description: blog.description,
+    datePublished: blog.publishedDate,
+    url: canonicalUrl,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+    ...(blog.image?.url ? { image: [toAbsoluteUrl(blog.image.url)] } : {}),
+    author: { '@type': 'Organization', name: 'Liberation Language Labs' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Liberation Language Labs',
+      logo: {
+        '@type': 'ImageObject',
+        url: toAbsoluteUrl('/assets/images/site_logo/og_preview_logo.png'),
+      },
+    },
+  }
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Blog', item: toAbsoluteUrl('/blog') },
+      { '@type': 'ListItem', position: 2, name: blog.title, item: canonicalUrl },
+    ],
+  }
 
   return (
     <div className="ll-root">
+      <JsonLd data={articleJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       <a className="skip" href="#main">
         Skip to content
       </a>
@@ -334,9 +355,6 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                   </Link>
                 </div>
               )}
-
-              {/* Share */}
-              <ShareButton url={postUrl} title={blog.title} />
             </div>
           </div>
         </article>

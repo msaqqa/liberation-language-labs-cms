@@ -1,10 +1,13 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: 'Page not found — Liberation Language Labs',
   description: "The page you were looking for isn't here — let's get you back on track.",
-}
+  path: '/not-found',
+  noindex: true,
+})
 
 const HELPFUL_LINKS: { label: string; href: string }[] = [
   { label: 'Labs blog', href: '/blog' },

@@ -5,6 +5,7 @@ import configPromise from '@payload-config'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
+import { buildMetadata, getSiteUrl } from '@/lib/seo'
 import './globals.css'
 
 const openSans = Open_Sans({
@@ -28,33 +29,14 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
-  title: 'Liberation Language Labs',
-  description: 'Speech therapy that affirms, engages, and empowers',
+  ...buildMetadata({
+    title: 'Liberation Language Labs',
+    description: 'Speech therapy that affirms, engages, and empowers',
+    path: '/',
+  }),
+  metadataBase: new URL(getSiteUrl()),
   icons: {
     icon: '/assets/images/site_logo/favourite_icon.svg',
-  },
-  openGraph: {
-    title: 'Liberation Language Labs',
-    description: 'Speech therapy that affirms, engages, and empowers',
-    url: process.env.NEXT_PUBLIC_SITE_URL,
-    siteName: 'Liberation Language Labs',
-    images: [
-      {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/assets/images/site_logo/og_preview_logo.png`,
-        width: 1200,
-        height: 630,
-        alt: 'Liberation Language Labs Logo',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Liberation Language Labs',
-    description: 'Speech therapy that affirms, engages, and empowers',
-    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/assets/images/site_logo/og_preview_logo.png`],
   },
 }
 

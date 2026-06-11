@@ -7,6 +7,8 @@ import Services from '@/components/Services'
 import Pricing from '@/components/Pricing'
 import Contact from '@/components/Contact'
 import { BlogSection } from '@/components/BlogSection'
+import { JsonLd } from '@/components/JsonLd'
+import { getSiteUrl, toAbsoluteUrl } from '@/lib/seo'
 
 export default async function HomePage() {
   const payload = await getPayload({ config: configPromise })
@@ -16,8 +18,23 @@ export default async function HomePage() {
 
   const getUrl = (media: any) => (typeof media === 'object' ? media?.url : '')
 
+  const contact = homeData.contactInfo ?? {}
+  const businessJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalBusiness',
+    name: 'Liberation Language Labs',
+    description: 'Speech therapy that affirms, engages, and empowers',
+    url: getSiteUrl(),
+    logo: toAbsoluteUrl('/assets/images/site_logo/og_preview_logo.png'),
+    ...(contact.phone ? { telephone: contact.phone } : {}),
+    ...(contact.email ? { email: contact.email } : {}),
+    ...(contact.address ? { address: contact.address } : {}),
+    areaServed: 'Whatcom County, WA',
+  }
+
   return (
     <div className="ll-root">
+      <JsonLd data={businessJsonLd} />
       <a className="skip" href="#about">
         Skip to content
       </a>

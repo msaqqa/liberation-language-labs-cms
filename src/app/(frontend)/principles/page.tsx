@@ -2,12 +2,14 @@ import type { ReactNode } from 'react'
 import type { Metadata } from 'next'
 import Banner from '@/components/Banner'
 import ClosingCta from '@/components/ClosingCta'
+import { buildMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: 'Our Principles — Liberation Language Labs',
   description:
     'The guiding principles behind the practice — neurodiversity-affirming, access-first, child-led, family-centered, grounded in abolitionist and decolonial values.',
-}
+  path: '/principles',
+})
 
 const PRINCIPLES: { no: string; title: string; body: ReactNode }[] = [
   {
@@ -55,8 +57,8 @@ const PRINCIPLES: { no: string; title: string; body: ReactNode }[] = [
     title: 'Families are partners.',
     body: (
       <>
-        The most powerful therapy happens in everyday moments between a child and the people who love
-        them. We coach, we follow your lead, and we never talk over you.
+        The most powerful therapy happens in everyday moments between a child and the people who
+        love them. We coach, we follow your lead, and we never talk over you.
       </>
     ),
   },
@@ -120,8 +122,8 @@ export default function PrinciplesPage() {
                 <h2 id="st-h">Grounded in abolitionist, decolonial values.</h2>
                 <p>
                   This practice operates on the traditional, ancestral, and unceded lands of Coast
-                  Salish peoples — past, present, and future. We name this not as a formality, but as
-                  a commitment: to centering self-determination, to questioning systems that
+                  Salish peoples — past, present, and future. We name this not as a formality, but
+                  as a commitment: to centering self-determination, to questioning systems that
                   pathologize difference, and to building a practice that gives power back to the
                   families and communities it serves.
                 </p>
