@@ -1,11 +1,14 @@
 /* =============================================================================
    Liberation Language Labs — Payload Admin theme
-   Implements the project Design System (CLAUDE.md): brand violet accent,
-   two-polarity surfaces (light default / plum-tinted dark), token scales,
-   single-primary CTA, mono-caps labels, accessible focus rings + reduced-motion.
+   Implements the project Design System (CLAUDE.md) and the "Payload Admin
+   Redesign" handoff: brand violet accent, two-polarity surfaces (white light /
+   plum-tinted dark), token scales, single-primary CTA, mono-caps labels,
+   accessible focus rings + reduced-motion.
 
-   Pure CSS-variable + selector override of Payload's design system — no schema
-   impact. Native light/dark toggle and nav layout are preserved.
+   Direction (per the design handoff): flat, clean surfaces. No decorative
+   glows, scanlines, side rails or corner brackets — depth comes from surface
+   steps + hairlines. No amber/yellow anywhere. Pure CSS-variable + selector
+   override of Payload's design system; no schema impact, native toggle kept.
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
@@ -19,18 +22,18 @@
   --acc: #9b42b6;
   --acc-soft: #bb63d4;
   --acc-deep: #5e2473;
-  --glow: rgba(155, 66, 182, 0.4);
+  --acc-text: #5e2473; /* accent TEXT on light — small-text safe */
+  --glow: rgba(155, 66, 182, 0.2);
+  --grad-acc: linear-gradient(135deg, #9b42b6, #6d4bd8); /* violet → indigo */
   --secondary: #3d759c;
   --teal: #3da1a5;
-  --amber: #f7ab1e;
   --ring: rgba(155, 66, 182, 0.55);
 
   /* mono-caps label color — AA on white (brightened for dark below) */
   --label: #9b42b6;
 
-  /* state — read as state, not brand */
+  /* state — read as state, not brand (no amber/yellow in chrome) */
   --done: #22c55e;
-  --flight: #f7ab1e;
   --queued: #475569;
   --error: #dc4b48;
 
@@ -66,26 +69,25 @@
 
   /* shell */
   --nav-width: 264px;
-
-  /* atmospheric (overridden per theme) */
-  --hud-tint: transparent;
-  --hud-grid-line: rgba(41, 48, 57, 0.04);
+  /* shared height of the sidebar logout block and the content footer, so their
+     top borders line up at the bottom of the page (tuned to fit Payload's
+     settings+logout controls without clipping) */
+  --ll-foot-h: 76px;
 }
 
 /* -----------------------------------------------------------------------------
-   §2 Surfaces — DARK (plum-tinted HUD). White ink on near-black violet.
+   §2 Surfaces — DARK (plum-tinted HUD). White ink on near-black plum.
+   Matches the design handoff: bg #0d0a12 · panel/input #141019 · cards #1b1622.
    -------------------------------------------------------------------------- */
 html[data-theme='dark'] {
-  /* Sentry solid-violet ramp: surface-canvas-dark #1b1622 base, monotonic lift.
-     One uniform canvas — no radial glow, no gradients (body + sidebar share it). */
-  --theme-elevation-0: #1b1622; /* page background (--theme-bg) — Sentry canvas-dark */
-  --theme-elevation-50: #150f23; /* inputs / sunken / panel — Sentry surface-night */
-  --theme-elevation-100: #2a2044; /* cards — lifted off the canvas */
-  --theme-elevation-150: #362d59; /* borders / dividers — Sentry hairline-violet */
-  --theme-elevation-200: #40356a;
-  --theme-elevation-250: #4a3e77;
-  --theme-elevation-300: #554984;
-  --theme-elevation-350: #605391;
+  --theme-elevation-0: #0d0a12; /* page background (--theme-bg) — plum-black */
+  --theme-elevation-50: #141019; /* inputs / sunken / panel */
+  --theme-elevation-100: #1b1622; /* cards — lifted off the canvas */
+  --theme-elevation-150: #2a2336; /* borders / dividers */
+  --theme-elevation-200: #352c44;
+  --theme-elevation-250: #403653;
+  --theme-elevation-300: #4b4061;
+  --theme-elevation-350: #564a70;
   --theme-elevation-400: #8f8499; /* muted text — lifted for contrast */
   --theme-elevation-450: #c9b9d4; /* secondary text */
   --theme-elevation-500: #d4c8dd;
@@ -100,15 +102,16 @@ html[data-theme='dark'] {
   --theme-elevation-950: #ffffff;
   --theme-elevation-1000: #ffffff;
 
-  --theme-bg: #1b1622;
-  --theme-input-bg: #150f23;
+  --theme-bg: #0d0a12;
+  --theme-input-bg: #141019;
   --theme-text: #ffffff;
   --theme-border-color: rgba(255, 255, 255, 0.09);
 
   --label: #cf86e6; /* brighter for contrast on plum-dark */
-  --glow: rgba(155, 66, 182, 0.5);
-  --hud-tint: transparent; /* no circular radial glow — uniform solid canvas */
-  --hud-grid-line: transparent;
+  --acc-text: #cf86e6; /* accent text on dark */
+  --glow: rgba(155, 66, 182, 0.35);
+  --grad-acc: linear-gradient(135deg, #bb63d4, #8a6cf0);
+  --ll-nav-soft: #1b1622; /* design --soft (dark) — neutral active/hover wash */
 }
 
 /* -----------------------------------------------------------------------------
@@ -117,8 +120,8 @@ html[data-theme='dark'] {
    -------------------------------------------------------------------------- */
 html[data-theme='light'] {
   --theme-elevation-0: #ffffff; /* page background */
-  --theme-elevation-50: #ffffff; /* inputs / cards / panels */
-  --theme-elevation-100: #ffffff;
+  --theme-elevation-50: #f6f8fb; /* inputs / sunken */
+  --theme-elevation-100: #ffffff; /* cards */
   --theme-elevation-150: #e0e4e8; /* borders */
   --theme-elevation-200: #c9ced3;
   --theme-elevation-400: #8c8f92; /* muted text (large/non-essential) */
@@ -129,16 +132,14 @@ html[data-theme='light'] {
   --theme-text: #293039; /* brand ink */
   --theme-border-color: #c9ced3;
 
-  --glow: rgba(155, 66, 182, 0.2);
-  --hud-tint: transparent;
-  --hud-grid-line: rgba(41, 48, 57, 0.04);
+  --glow: rgba(155, 66, 182, 0.16);
+  --ll-nav-soft: #eef3f7; /* design --soft (light) — neutral active/hover wash */
 }
 
-/* §6 Surface: flat solid canvas in both polarities (dark: Sentry #1b1622,
-   light: #ffffff). The atmospheric radial glow is disabled (--hud-tint:transparent). */
+/* §6 Flat solid canvas in both polarities — no atmospheric gradient. */
 body {
   background-color: var(--theme-bg);
-  background-image: radial-gradient(ellipse at top, var(--hud-tint), transparent 60%);
+  background-image: none;
 }
 
 /* =============================================================================
@@ -168,10 +169,163 @@ select:focus-visible {
 }
 
 /* =============================================================================
+   Global admin top bar (.ll-topbar) — rendered by AdminChrome
+   (admin.components.providers), so it appears on every page incl. login.
+   Brand logo · light/dark toggle · initials avatar. Flat bar, hairline base.
+   On app pages it is offset to start after the full-height sidebar (see the
+   "App shell layout" section below); on login it spans full width.
+   The breadcrumb tier stays in Payload's own AppHeader below this bar; its
+   duplicate account avatar is hidden since the top bar carries the avatar.
+   ========================================================================== */
+.ll-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-lg);
+  height: 64px;
+  padding: 0 32px;
+  background: var(--theme-bg);
+  border-bottom: 1px solid var(--theme-border-color);
+}
+.ll-topbar__brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+/* "Dashboard" wordmark replaces the logo */
+.ll-topbar__wordmark {
+  font-weight: 900;
+  font-size: 1.18rem;
+  letter-spacing: -0.01em;
+  color: var(--theme-text);
+}
+.ll-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* theme toggle — sun/moon pill */
+.ll-topbar__theme {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-border-color);
+  border-radius: var(--r-full);
+}
+.ll-topbar__theme button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  color: var(--theme-elevation-400, #8c8f92);
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+.ll-topbar__theme button svg {
+  width: 16px;
+  height: 16px;
+}
+.ll-topbar__theme button:hover {
+  color: var(--theme-text);
+}
+.ll-topbar__theme button.on {
+  background: var(--acc);
+  color: #ffffff;
+}
+html[data-theme='dark'] .ll-topbar__theme button.on {
+  background: var(--acc-soft);
+}
+
+/* user chip — initials avatar + admin name, links to the account view */
+.ll-topbar__userchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 10px 3px 4px;
+  border-radius: var(--r-full);
+  text-decoration: none;
+  transition: background 0.12s ease;
+}
+.ll-topbar__userchip:hover {
+  background: var(--theme-elevation-50);
+}
+.ll-topbar__avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 50%;
+  background: var(--grad-acc);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  user-select: none;
+}
+.ll-topbar__uname {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--theme-text);
+  white-space: nowrap;
+}
+
+/* hide Payload's built-in account avatar in the breadcrumb bar (we carry it) */
+.app-header__account {
+  display: none;
+}
+
+/* =============================================================================
+   Global admin footer (.ll-appfooter) — rendered by AdminChrome.
+   Ultra-minimal: copyright line + mono build tag. It scrolls with the page;
+   its height equals the sidebar's logout block (--ll-foot-h) so that, at the
+   bottom of the page, its top border lines up with the divider above Logout.
+   ========================================================================== */
+.ll-appfooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-lg);
+  flex-wrap: wrap;
+  min-height: var(--ll-foot-h);
+  padding: 0 32px;
+  background: var(--theme-bg);
+  border-top: 1px solid var(--theme-border-color);
+}
+.ll-appfooter__copy {
+  font-size: 14px; /* px — Payload's root is 13px */
+  color: var(--theme-elevation-400, #8c8f92);
+}
+.ll-appfooter__build {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--theme-elevation-400, #8c8f92);
+}
+@media (max-width: 720px) {
+  .ll-topbar {
+    padding: 0 20px;
+  }
+  .ll-appfooter {
+    padding: 18px 20px;
+  }
+}
+
+/* =============================================================================
    §7 Components — accent injection (both themes)
    ========================================================================== */
 
-/* Primary action button (Save / Publish) — single, authoritative CTA. */
+/* Primary action button (Save / Publish) — single, authoritative CTA.
+   Flat fill, no glow; hover lifts to the soft tint, active to the deep shade. */
 .btn--style-primary {
   --bg-color: var(--acc);
   --color: #ffffff;
@@ -181,99 +335,96 @@ select:focus-visible {
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  box-shadow:
-    var(--shadow-1),
-    0 6px 18px var(--glow);
 }
 .btn--style-primary:active {
   --bg-color: var(--acc-deep);
 }
 
-/* Inline links — hover shifts to the soft accent (underline kept by Payload). */
-a:not(.btn):hover {
+/* Inline links — hover shifts to the soft accent (underline kept by Payload).
+   The user chip and sidebar nav links are excluded so they keep their own
+   hover treatment (neutral text, like the design). */
+a:not(.btn):not(.ll-topbar__userchip):not(.nav__link):hover {
   color: var(--acc-soft);
 }
 
 /* =============================================================================
-   §4 Sidebar — fixed, full-height console.
-   `sticky` keeps the nav in its native grid column (content never shifts);
-   `overflow: hidden` makes it strictly fixed with no scrollbars.
+   §4 Sidebar — full-height console. Flat panel sharing the content background
+   (req: same bg token); a single hairline (border-inline-end) separates it from
+   the content. On desktop the nav is pinned to the full viewport height (see
+   "App shell layout" below) so it spans the whole screen beside the offset top
+   bar and footer. Payload's grid still reserves the column, so the collapse
+   button keeps working.
    ========================================================================== */
 .nav {
-  position: sticky;
-  top: 0;
-  height: 100dvh;
-  overflow: hidden;
-  /* Solid, uniform canvas — shares the exact body background in both polarities
-     (dark: Sentry #1b1622, light: #ffffff). No gradient, no grid texture. */
   background: var(--theme-bg);
-  border-right: 1px solid var(--theme-border-color);
+  border-inline-end: 1px solid var(--theme-border-color);
 }
 
-/* Inner accent rail down the edge of the sidebar. */
-.nav::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 2px;
-  height: 100%;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent, var(--acc), transparent);
-  opacity: 0.5;
-  box-shadow: 0 0 10px var(--glow);
+/* Logout block — pinned to the bottom by Payload (margin-top:auto). Add the
+   divider above it and lock its height to --ll-foot-h so it lines up with the
+   content footer's top border at the bottom of the page. */
+.nav__controls {
+  justify-content: center;
+  min-height: var(--ll-foot-h);
+  border-top: 1px solid var(--theme-border-color);
+  /* stretch the divider edge-to-edge across the FULL sidebar width (the block
+     otherwise shrinks to its content) and cancel the nav's horizontal padding,
+     so it joins the footer's top border as one continuous line */
+  align-self: stretch;
+  margin-inline: calc(-1 * var(--nav-padding-inline-start)) calc(-1 * var(--nav-padding-inline-end));
+  padding-inline: var(--nav-padding-inline-start) var(--nav-padding-inline-end);
+}
+.nav__controls > :first-child {
+  margin-top: 0;
+}
+/* drop the sidebar's bottom padding so the logout block sits flush at the very
+   bottom — its top divider then lines up with the footer's top border */
+.nav__scroll {
+  padding-block-end: 0;
 }
 
-/* Brand header zone — divider + sweeping scanline (motion-gated). */
-.nav__header {
-  position: relative;
-  border-bottom: 1px solid var(--theme-border-color);
-}
-.nav__header::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--acc), transparent);
-  opacity: 0.7;
-  animation: navScan 6s linear infinite;
-}
-
-/* Mono-caps group labels (PAGES / LAYOUT / COLLECTIONS) with a leading tick. */
+/* Mono-caps group labels (PAGES / LAYOUT / COLLECTIONS). */
 .nav__label,
 .nav-group__toggle {
   font-family: var(--font-mono);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  font-size: 12.5px; /* px — Payload's root is 13px, so rem reads smaller */
   font-weight: 800;
   color: var(--label);
   opacity: 1;
+  /* align the label's start with the nav-item icons below it (.nav__link has
+     padding-inline-start: 0.7rem) so there's no leading step */
+  padding-inline-start: 0.7rem;
 }
 .nav-group__toggle:hover,
 .nav-group__toggle:focus-visible {
   color: var(--acc);
 }
-.nav__label::before {
-  content: '';
-  display: inline-block;
-  width: 14px;
-  height: 2px;
-  margin-right: var(--sp-sm);
-  vertical-align: middle;
-  background: var(--label);
-  box-shadow: 0 0 6px var(--glow);
+
+/* Reverse the sidebar group order (Pages → Layout → Collections) while keeping
+   the logout block pinned at the very bottom. The 3 groups are the first
+   .nav-group children of .nav__wrap; .nav__controls follows them. */
+.nav__wrap > .nav-group:nth-of-type(1) {
+  order: 3;
+}
+.nav__wrap > .nav-group:nth-of-type(2) {
+  order: 2;
+}
+.nav__wrap > .nav-group:nth-of-type(3) {
+  order: 1;
+}
+.nav__wrap > .nav__controls {
+  order: 9;
 }
 
-/* Nav rows — rounded pills; calm background + 1px border on hover/active
-   (no underline, no inset shadow). Reserved transparent border = no shift. */
+/* Nav rows — rounded pills; calm wash + a violet left indicator when active
+   (no underline, no glow). Reserved transparent border = no layout shift. */
 .nav__link {
   position: relative;
   padding-block: var(--sp-sm);
   padding-inline: 0.7rem 1.6rem;
-  margin: 1px 0;
+  margin: 3px 0;
   border-radius: var(--r-md);
   border: 1px solid transparent;
   font-weight: 500;
@@ -283,45 +434,148 @@ a:not(.btn):hover {
     color 0.18s ease,
     border-color 0.18s ease;
 }
-.nav__link:hover,
-.nav__link:focus,
-.nav__link:focus-visible {
+/* hover applies only to NON-active items (active is a <div> without href) — a
+   light wash, no border, so it never reads like the selected page */
+.nav__link[href]:hover,
+.nav__link[href]:focus,
+.nav__link[href]:focus-visible {
   text-decoration: none;
   color: var(--theme-text);
-  background: color-mix(in srgb, var(--acc) 10%, transparent);
-  border-color: color-mix(in srgb, var(--acc) 35%, transparent);
+  background: color-mix(in srgb, var(--ll-nav-soft) 60%, transparent);
 }
-.nav__link.active,
-.nav__link[aria-current='page'],
-.nav__link--active {
+/* Active item — Payload renders it as a <div> without href and adds a
+   .nav__link-indicator child (no .active class), so target those. Distinguished
+   like :hover but a touch stronger + a subtle accent border, so it doesn't read
+   as a transient hover elsewhere. */
+.nav__link:not([href]),
+.nav__link:has(.nav__link-indicator) {
   color: var(--theme-text);
-  font-weight: 600;
-  background: color-mix(in srgb, var(--acc) 16%, transparent);
-  border-color: color-mix(in srgb, var(--acc) 48%, transparent);
+  font-weight: 700;
+  background: var(--ll-nav-soft); /* design --soft, neutral (not an accent wash) */
+  border-color: color-mix(in srgb, var(--acc) 30%, transparent);
 }
+/* (active left-bar now drawn via .nav__link-indicator — see the nav-icons
+   section below — so ::before is free to carry the per-item icon.) */
 
-/* Account footer / logout. */
-.nav__controls .nav__link:hover,
+/* Account footer / logout — icon + "Log out" label, aligned like a nav item. */
+.nav__log-out {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-block: var(--sp-sm);
+  padding-inline-start: 0.7rem;
+  border-radius: var(--r-md);
+  color: var(--theme-elevation-450, #51565d);
+  text-decoration: none;
+}
+.nav__log-out svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+.nav__log-out svg .stroke {
+  stroke: currentColor;
+}
+.nav__log-out::after {
+  content: 'Log out';
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+}
+/* hover — icon and "Log out" label share the same accent colour (no red) */
 .nav__log-out:hover {
   color: var(--acc-soft);
 }
-
-/* Inner scroll area — no scrollbar (items fit the viewport height). */
-.nav__scroll {
-  overflow: hidden;
+.nav__log-out:hover svg .stroke {
+  stroke: var(--acc-soft);
+}
+.nav__controls .nav__link:hover {
+  color: var(--acc-soft);
 }
 
 /* =============================================================================
-   Breadcrumbs (step-nav) — bold mono-caps, matched to the label style.
+   App shell layout (desktop ≥1024px)
+   The sidebar is pinned to the full viewport height so it spans the whole screen
+   beside the top bar and footer (which the chrome — rendered above/below
+   Payload's content — is offset to start after). The sidebar's logout block sits
+   at the very bottom (it's full-height + fixed), so the footer's top border lines
+   up with the divider above Logout once you scroll to the bottom of the page.
+
+   Payload lays the content out as a grid [ nav | content ]; since the nav is now
+   fixed (out of flow), we collapse that grid to a single content column and pad
+   it to clear the fixed sidebar. Collapsing the nav (which drops
+   .template-default--nav-open) slides the sidebar away and reclaims the width.
+   On the login screen there is no .template-default, so nothing is offset.
+   ========================================================================== */
+@media (min-width: 1024px) {
+  body:has(.template-default--nav-open) .nav {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    height: 100vh;
+    width: var(--nav-width);
+    z-index: 20;
+  }
+  /* nav is out of flow → one content column, padded to clear the fixed sidebar */
+  body:has(.template-default--nav-open) .template-default {
+    grid-template-columns: 1fr;
+  }
+  body:has(.template-default--nav-open) .template-default__wrap {
+    padding-inline-start: var(--nav-width);
+  }
+  body:has(.template-default--nav-open) .ll-topbar,
+  body:has(.template-default--nav-open) .ll-appfooter {
+    margin-inline-start: var(--nav-width);
+  }
+  /* collapse toggle — when the sidebar is OPEN, pin it to the sidebar's
+     top-right corner */
+  body:has(.template-default--nav-open) .template-default__nav-toggler-wrapper {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: var(--nav-width);
+    height: var(--app-header-height);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-inline-end: 14px;
+    z-index: 30;
+    pointer-events: none;
+  }
+  /* when the sidebar is COLLAPSED, move the toggle into the top bar at the far
+     left, next to the logo (so the sidebar can be reopened from there) */
+  body:has(.template-default:not(.template-default--nav-open)) .template-default__nav-toggler-wrapper {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: auto;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline-start: 20px;
+    z-index: 40;
+    pointer-events: none;
+  }
+  body:has(.template-default:not(.template-default--nav-open)) .ll-topbar {
+    padding-inline-start: 64px; /* room for the toggle beside the logo */
+  }
+  .template-default__nav-toggler-container {
+    pointer-events: auto;
+  }
+}
+
+/* =============================================================================
+   Breadcrumbs (step-nav) — mono-caps console readout, matched to the labels.
    ========================================================================== */
 .step-nav,
 .step-nav a,
 .step-nav span {
   font-family: var(--font-mono);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   font-weight: 800;
-  font-size: 0.92rem;
+  font-size: 14px; /* px — matches the sidebar group labels (.nav__label) */
 }
 .step-nav a {
   color: var(--label);
@@ -331,69 +585,339 @@ a:not(.btn):hover {
   text-decoration: none;
   color: var(--acc);
 }
-
-/* =============================================================================
-   §8 Page-edge side rail (HUD signature) — single, on the content document.
-   ========================================================================== */
-.template-default::after {
-  content: '';
-  position: fixed;
-  top: 35vh;
-  right: 6px;
-  width: 3px;
-  height: 30vh;
-  z-index: 40;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent, var(--acc), transparent);
-  box-shadow: 0 0 12px var(--glow);
-  animation: hudPulse 4s ease-in-out infinite;
+/* Root crumb — replace the logo/icon with the "Control Center" label (matches
+   the design's breadcrumb). Payload fixes the home node to an 18px icon box and
+   clamps crumbs to 160px with ellipsis; override both so the label shows fully
+   and leaves no leading icon gap. */
+.step-nav__home {
+  width: auto;
+  height: auto;
+}
+.step-nav__home img {
+  display: none;
+}
+.step-nav__home span {
+  display: inline-flex;
+  align-items: center;
+  max-width: none;
+  overflow: visible;
+}
+.step-nav__home span::after {
+  content: 'Control Center';
+  white-space: nowrap;
+  color: var(--label);
 }
 
 /* =============================================================================
-   Bespoke Dashboard view (.ll-dash) — adapts to both polarities.
+   §7 Data grid — Payload list/collection tables as a modern dashboard grid:
+   crisp borders, a soft bold header row, generous padding, hairline rows.
+   ========================================================================== */
+.table {
+  border: 1px solid var(--theme-border-color);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--theme-elevation-100);
+}
+.table table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.table thead th {
+  text-align: left;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 15px; /* px — Payload's root is 13px, so rem reads smaller */
+  letter-spacing: 0.01em;
+  color: var(--theme-text);
+  padding: 18px 22px;
+  background: var(--theme-elevation-50);
+  border-bottom: 1px solid var(--theme-border-color);
+  white-space: nowrap;
+}
+.table tbody td {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--theme-border-color);
+  color: var(--theme-elevation-450, #51565d);
+  font-size: 15px;
+  vertical-align: middle;
+}
+/* cell links/inner text inherit the larger cell font (Payload sets it on the
+   inner elements, so target them explicitly) */
+.table tbody td a,
+.table tbody td span,
+.table tbody td .cell-data,
+.table tbody td button {
+  font-size: 15px;
+}
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.table tbody tr {
+  transition: background 0.12s ease;
+}
+.table tbody tr:hover {
+  background: var(--theme-elevation-50);
+}
+/* First column reads as the record name. */
+.table tbody td:first-child {
+  color: var(--theme-text);
+  font-weight: 600;
+}
+
+/* =============================================================================
+   Document field tabs (e.g. Home: Hero / About / …) — pill layout per design.
+   Payload makes the tab bar full-bleed (negative -gutter margins + gutter
+   spacers); we cancel that so the pills stay inside the content column and
+   scroll horizontally within it instead of wrapping or overflowing.
+   ========================================================================== */
+.tabs-field {
+  margin-inline: 0; /* cancel the -gutter full-bleed → stay in the container */
+}
+.tabs-field__content-wrap {
+  padding-inline: 0; /* fields already align; drop the gutter re-pad */
+}
+.tabs-field__tabs-wrap {
+  overflow-x: auto; /* this is the scroller */
+  overflow-y: visible;
+  padding-block: 8px; /* room for the active pill's glow */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge */
+}
+.tabs-field__tabs-wrap::-webkit-scrollbar {
+  display: none;
+}
+.tabs-field__tabs {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 9px;
+  min-width: 100%;
+  border-bottom: 0;
+}
+/* remove Payload's gutter spacer pseudo-elements */
+.tabs-field__tabs::before,
+.tabs-field__tabs::after {
+  display: none;
+}
+.tabs-field__tab-button {
+  flex: 0 0 auto; /* don't shrink — let the row scroll */
+  margin: 0; /* gap handles spacing */
+  padding: 9px 19px;
+  white-space: nowrap;
+  border-radius: var(--r-full);
+  border: 1px solid var(--theme-border-color);
+  background: transparent;
+  color: var(--theme-elevation-450, #51565d);
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 1; /* Payload dims inactive tabs to .5 — keep them legible */
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.tabs-field__tab-button:hover {
+  border-color: var(--acc);
+  color: var(--theme-text);
+}
+.tabs-field__tab-button--active,
+.tabs-field__tab-button--active:hover {
+  background: var(--grad-acc);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 12px var(--glow);
+}
+/* drop Payload's underline indicator under the active tab */
+.tabs-field__tab-button::after {
+  display: none;
+}
+
+/* =============================================================================
+   Actions to the far right — list "Create New" and document "Save"; both styled
+   as the design's gradient pills.
+   ========================================================================== */
+.list-header__title-actions {
+  margin-inline-start: auto;
+}
+.doc-controls__controls-wrapper {
+  margin-inline-start: auto;
+}
+.list-create-new-doc__create-new-button,
+.btn--style-primary {
+  background: var(--grad-acc) !important;
+  --bg-color: transparent;
+  border: 0;
+  color: #ffffff !important;
+  box-shadow: 0 8px 22px var(--glow);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+/* "Create New" (and other small list pills) → same height as the medium "Save"
+   button: give them the medium vertical padding (Payload's small size uses 0). */
+.list-create-new-doc__create-new-button,
+.list-header__title-actions .btn--size-small,
+.list-controls .btn--size-small {
+  --btn-padding-block-start: calc(var(--base) * 0.2);
+  --btn-padding-block-end: calc(var(--base) * 0.2);
+  padding-block: calc(var(--base) * 0.2);
+}
+.list-create-new-doc__create-new-button:hover,
+.btn--style-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px var(--glow);
+  filter: brightness(1.05);
+}
+/* Disabled state (e.g. "Save" with no unsaved changes) — muted, no gradient or
+   glow, not-allowed, and no hover lift, so it clearly reads as inactive. */
+.btn--style-primary.btn--disabled,
+.btn--style-primary:disabled,
+.btn--style-primary[aria-disabled='true'] {
+  background: var(--theme-elevation-150) !important;
+  color: var(--theme-elevation-400, #8c8f92) !important;
+  box-shadow: none;
+  cursor: not-allowed;
+  filter: none;
+}
+.btn--style-primary.btn--disabled:hover,
+.btn--style-primary:disabled:hover,
+.btn--style-primary[aria-disabled='true']:hover {
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+/* =============================================================================
+   Globals (Pages + Layout): drop the Edit/API doc-tabs and lift "Save" up into
+   the title row where they were. Scoped to global edit views (their form carries
+   a `global-edit--<slug>` class) so collection edit views are untouched.
+   ========================================================================== */
+.template-default__wrap:has([class*='global-edit--']) .doc-tabs {
+  display: none;
+}
+.template-default__wrap:has([class*='global-edit--']) .doc-controls {
+  position: static;
+  margin-top: -70px; /* lift onto the title row, centred with the title */
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  pointer-events: none; /* don't cover the title */
+}
+/* kill the frosted-glass bg + blur (it would blur the title now behind it) */
+.template-default__wrap:has([class*='global-edit--']) .doc-controls::before,
+.template-default__wrap:has([class*='global-edit--']) .doc-controls::after {
+  display: none;
+}
+.template-default__wrap:has([class*='global-edit--']) .doc-controls__divider {
+  display: none;
+}
+.template-default__wrap:has([class*='global-edit--']) .doc-controls__content {
+  display: none; /* empty status/meta column */
+}
+.template-default__wrap:has([class*='global-edit--']) .doc-controls__controls-wrapper,
+.template-default__wrap:has([class*='global-edit--']) .doc-controls__controls {
+  pointer-events: auto;
+}
+
+/* =============================================================================
+   Sidebar nav icons — one modern line icon per item, matching the design.
+   Drawn as a masked ::before so it tints with the accent; the active item's
+   left bar moves to Payload's own .nav__link-indicator to free the pseudo.
+   ========================================================================== */
+.nav__link {
+  /* empty SVG default → masked-out (invisible) for any link without an icon */
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E");
+}
+.nav__link::before {
+  content: '';
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin-inline-end: 10px;
+  background-color: var(--theme-elevation-400, #8c8f92);
+  -webkit-mask: var(--ico) center / 18px 18px no-repeat;
+  mask: var(--ico) center / 18px 18px no-repeat;
+  transition: background-color var(--dur-micro, 0.12s) ease;
+}
+.nav__link[href]:hover::before,
+.nav__link:not([href])::before,
+.nav__link:has(.nav__link-indicator)::before {
+  background-color: var(--acc);
+}
+html[data-theme='dark'] .nav__link[href]:hover::before,
+html[data-theme='dark'] .nav__link:not([href])::before,
+html[data-theme='dark'] .nav__link:has(.nav__link-indicator)::before {
+  background-color: var(--acc-text);
+}
+/* no left accent bar on the active item — it's distinguished by the same calm
+   background wash as :hover (see .nav__link.active below) */
+.nav__link-indicator {
+  display: none;
+}
+/* per-item icon masks (matched by Payload's nav link ids) */
+#nav-global-home-page {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z'/%3E%3Cpath d='M9.5 21v-6h5v6'/%3E%3C/svg%3E");
+}
+#nav-global-principles-page {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20s-7-4.4-7-9.1A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.9C19 15.6 12 20 12 20z'/%3E%3C/svg%3E");
+}
+#nav-global-header {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='4.5' width='17' height='15' rx='2'/%3E%3Cpath d='M3.5 9.5h17'/%3E%3C/svg%3E");
+}
+#nav-global-footer {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='4.5' width='17' height='15' rx='2'/%3E%3Cpath d='M3.5 14.5h17'/%3E%3C/svg%3E");
+}
+#nav-blogs {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3.5H7.5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 3.5V8h4.5'/%3E%3Cpath d='M9 13h6M9 16.5h6'/%3E%3C/svg%3E");
+}
+#nav-media {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='4.5' width='17' height='15' rx='2'/%3E%3Ccircle cx='8.5' cy='9.5' r='1.6'/%3E%3Cpath d='m20 16-4.5-4.5L6 21'/%3E%3C/svg%3E");
+}
+#nav-users {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='8' r='3.2'/%3E%3Cpath d='M3.5 19.5a5.5 5.5 0 0 1 11 0'/%3E%3Cpath d='M16 5.3a3.2 3.2 0 0 1 0 6.2M20.5 19.5a5.5 5.5 0 0 0-3.8-5.2'/%3E%3C/svg%3E");
+}
+
+/* =============================================================================
+   Bespoke Dashboard view (.ll-dash) — adapts to both polarities. Flat + clean.
    ========================================================================== */
 .ll-dash {
   max-width: 1180px;
   margin: 0 auto;
-  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) var(--sp-section);
+  /* tight top gap — title sits just under the breadcrumb bar (eyebrow removed) */
+  padding: 0.5rem clamp(1rem, 4vw, 2.5rem) var(--sp-section);
   font-family: var(--font-body);
   color: var(--theme-text);
 }
 
 /* header — eyebrow + two-tone title */
-.ll-dash__eyebrow {
-  display: inline-block;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--acc);
-}
 .ll-dash__title {
   font-family: var(--font-body);
   font-weight: 900;
   letter-spacing: -0.03em;
   line-height: 1;
-  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  font-size: clamp(2.1rem, 4.5vw, 3.1rem);
   margin: 0.5rem 0 0;
   color: var(--theme-text);
 }
 .ll-dash__title span {
   color: var(--acc);
 }
+html[data-theme='dark'] .ll-dash__title span {
+  color: var(--acc-text);
+}
 .ll-dash__sub {
-  margin: 0.75rem 0 0;
-  max-width: 48ch;
+  margin: 1rem 0 0;
+  max-width: 54ch;
   color: var(--theme-elevation-450, #51565d);
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.0625rem;
+  line-height: 1.7;
 }
 
-/* stats grid — HUD corner-bracket boxes */
+/* stats grid — flat icon cards, hover lift with violet-tinted shadow */
 .ll-dash__stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--sp-lg);
   margin-top: var(--sp-xxl);
 }
@@ -401,153 +925,165 @@ a:not(.btn):hover {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  padding: var(--sp-xl) 1.4rem;
+  padding: 22px;
   text-decoration: none;
-  border: 1px dashed color-mix(in srgb, var(--acc) 35%, transparent);
-  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-border-color);
+  border-radius: var(--r-lg);
+  background: var(--theme-elevation-100);
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 .ll-dash__stat:hover {
   transform: translateY(-3px);
   border-color: var(--acc);
   box-shadow: var(--shadow-2);
 }
+.ll-dash__stat-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acc) 24%, transparent);
+}
+html[data-theme='dark'] .ll-dash__stat-icon {
+  color: var(--acc-text);
+}
+.ll-dash__stat-icon svg {
+  width: 18px;
+  height: 18px;
+}
 .ll-dash__stat-value {
-  font-weight: 900;
-  font-size: 2.4rem;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 2.3rem;
   line-height: 1;
   color: var(--theme-text);
+  margin-top: 20px;
 }
 .ll-dash__stat-label {
   font-family: var(--font-mono);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.95rem;
-  font-weight: 800;
+  letter-spacing: 0.14em;
+  font-size: 0.62rem;
+  font-weight: 700;
   color: var(--label);
+  margin-top: 9px;
 }
 
-/* corner brackets */
-.hud-box::before,
-.hud-box::after,
-.hud-box .br-tl,
-.hud-box .br-br {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 2px solid var(--acc);
-}
-.hud-box::before {
-  top: -2px;
-  left: -2px;
-  border-right: none;
-  border-bottom: none;
-}
-.hud-box::after {
-  top: -2px;
-  right: -2px;
-  border-left: none;
-  border-bottom: none;
-}
-.hud-box .br-tl {
-  bottom: -2px;
-  left: -2px;
-  border-right: none;
-  border-top: none;
-}
-.hud-box .br-br {
-  bottom: -2px;
-  right: -2px;
-  border-left: none;
-  border-top: none;
-}
-
-/* entry-point sections */
+/* entry-point groups — separated, spacious title + description */
 .ll-dash__section {
-  margin-top: 2.75rem;
+  margin-top: 3rem;
 }
-.ll-dash__group-label {
-  display: block;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: var(--label);
+.ll-dash__group-head {
   margin-bottom: var(--sp-lg);
-  padding-bottom: var(--sp-sm);
-  border-bottom: 1px solid var(--theme-border-color);
+}
+.ll-dash__group-title {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+  color: var(--theme-text);
+}
+.ll-dash__group-desc {
+  display: block;
+  margin-top: 7px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--theme-elevation-400, #8c8f92);
+  max-width: 60ch;
 }
 .ll-dash__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-lg);
+}
+.ll-dash__grid--two {
+  grid-template-columns: repeat(2, 1fr);
 }
 .ll-dash__card {
   display: flex;
   align-items: center;
   gap: var(--sp-lg);
-  padding: 1.15rem 1.25rem;
+  padding: 18px;
   text-decoration: none;
-  border-radius: var(--r-xl);
+  border-radius: var(--r-lg);
   border: 1px solid var(--theme-border-color);
   background: var(--theme-elevation-100);
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 .ll-dash__card:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--acc) 60%, var(--theme-border-color));
+  transform: translateY(-3px);
+  border-color: var(--acc);
   box-shadow: var(--shadow-2);
 }
 .ll-dash__chip {
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   border-radius: var(--r-md);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
   color: var(--acc);
-  border: 1px solid color-mix(in srgb, var(--acc) 45%, transparent);
-  background: color-mix(in srgb, var(--acc) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acc) 24%, transparent);
+  background: color-mix(in srgb, var(--acc) 13%, transparent);
+}
+html[data-theme='dark'] .ll-dash__chip {
+  color: var(--acc-text);
+}
+.ll-dash__chip svg {
+  width: 23px;
+  height: 23px;
 }
 .ll-dash__card-body {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 4px;
   flex: 1 1 auto;
+  min-width: 0;
 }
 .ll-dash__card-title {
+  display: block;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.98rem;
   color: var(--theme-text);
 }
 .ll-dash__card-desc {
+  display: block;
   font-size: 0.82rem;
-  line-height: 1.4;
-  color: var(--theme-elevation-450, #51565d);
+  line-height: 1.45;
+  color: var(--theme-elevation-400, #8c8f92);
 }
 .ll-dash__card-arrow {
-  color: var(--acc);
-  font-size: 1.1rem;
-  transition: transform 0.25s ease;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: var(--theme-elevation-400, #8c8f92);
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+.ll-dash__card-arrow svg {
+  width: 18px;
+  height: 18px;
 }
 .ll-dash__card:hover .ll-dash__card-arrow {
-  transform: translateX(4px);
+  color: var(--acc);
+  transform: translateX(2px);
+}
+html[data-theme='dark'] .ll-dash__card:hover .ll-dash__card-arrow {
+  color: var(--acc-text);
 }
 
-/* footer line */
+/* footer line — minimalist mono tag */
 .ll-dash__foot {
   display: flex;
   gap: 0.6rem;
@@ -555,55 +1091,48 @@ a:not(.btn):hover {
   padding-top: 1.25rem;
   border-top: 1px solid var(--theme-border-color);
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--label);
+  color: var(--theme-elevation-400, #8c8f92);
+}
+
+/* responsive */
+@media (max-width: 1080px) {
+  .ll-dash__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ll-dash__grid,
+  .ll-dash__grid--two {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 720px) {
+  .ll-dash__stats,
+  .ll-dash__grid,
+  .ll-dash__grid--two {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* =============================================================================
-   §9 Motion
+   §9/§10 Reduced-motion contract — still every hover transform.
+   Non-negotiable for this audience (vestibular / photosensitivity safety).
    ========================================================================== */
-@keyframes hudPulse {
-  0%,
-  100% {
-    opacity: 0.45;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-@keyframes navScan {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  15%,
-  85% {
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-/* §9/§10 Reduced-motion contract — still every loop and hover transform.
-   Non-negotiable for this audience (vestibular / photosensitivity safety). */
 @media (prefers-reduced-motion: reduce) {
-  .template-default::after,
-  .nav__header::after {
-    animation: none !important;
-  }
   .ll-dash__stat,
   .ll-dash__card,
   .ll-dash__card-arrow,
-  .nav__link {
+  .nav__link,
+  .table tbody tr,
+  .ll-topbar__theme button,
+  .ll-topbar__avatar {
     transition: none !important;
   }
   .ll-dash__stat:hover,
-  .ll-dash__card:hover {
+  .ll-dash__card:hover,
+  .ll-topbar__avatar:hover {
     transform: none;
   }
   .ll-dash__card:hover .ll-dash__card-arrow {

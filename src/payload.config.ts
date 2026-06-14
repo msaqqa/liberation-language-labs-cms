@@ -56,6 +56,10 @@ export default buildConfig({
     user: Users.slug,
     // Theme left unset → native light/dark toggle stays intact. The HUD reskin
     // (custom.scss) adapts to both modes.
+    // Browser extensions (e.g. ColorZilla) inject attributes like
+    // `cz-shortcut-listen` into the document before React hydrates, which trips a
+    // dev-only hydration warning. This suppresses those benign mismatches.
+    suppressHydrationWarning: true,
     meta: {
       titleSuffix: '· Liberation Labs',
       description: 'Liberation Language Labs — content control panel',
@@ -75,6 +79,11 @@ export default buildConfig({
         Logo: '/components/Graphics#Logo',
         Icon: '/components/Graphics#Icon',
       },
+      // Global admin chrome (top bar + footer) wrapping every page — including
+      // the login screen. The bar holds the brand logo · theme toggle · initials
+      // avatar; the footer is the minimalist copyright + build tag. custom.scss
+      // offsets both to start after the full-height sidebar on app pages.
+      providers: ['/components/admin/AdminChrome#AdminChrome'],
       views: {
         // Bespoke HUD dashboard replacing Payload's default view
         dashboard: {
