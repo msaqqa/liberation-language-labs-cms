@@ -10,7 +10,7 @@ export const AdminFooter = () => {
   return (
     <footer className="ll-appfooter">
       <span className="ll-appfooter__copy">© {year} Liberation Language Labs</span>
-      <span className="ll-appfooter__build">Build 1.0 · Payload</span>
+      <span className="ll-appfooter__build">Build 2.0 · Taqat</span>
     </footer>
   )
 }

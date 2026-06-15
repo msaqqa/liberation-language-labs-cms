@@ -70,9 +70,10 @@
   /* shell */
   --nav-width: 264px;
   /* shared height of the sidebar logout block and the content footer, so their
-     top borders line up at the bottom of the page (tuned to fit Payload's
-     settings+logout controls without clipping) */
-  --ll-foot-h: 76px;
+     top borders line up at the bottom of the page. Set to match the 64px topbar
+     height so the footer mirrors the header (the sidebar footer follows along,
+     since both read this token). */
+  --ll-foot-h: 64px;
 }
 
 /* -----------------------------------------------------------------------------
@@ -167,6 +168,37 @@ select:focus-visible {
   border-color: var(--acc) !important;
   box-shadow: 0 0 0 1px var(--acc) !important;
 }
+/* Invalid field — the focus ring reinforces the error (red) instead of the brand
+   violet, so focus doesn't visually contradict the red border + message (§10).
+   Valid fields keep the violet focus above. Payload marks errors as .field-type.error. */
+.field-type.error input:focus-visible,
+.field-type.error textarea:focus-visible,
+.field-type.error select:focus-visible {
+  outline-color: var(--theme-error-500, var(--error));
+}
+.field-type.error .rs__control--is-focused {
+  border-color: var(--theme-error-500, var(--error)) !important;
+  box-shadow: 0 0 0 1px var(--theme-error-500, var(--error)) !important;
+}
+
+/* =============================================================================
+   Chrome shell (.ll-shell) — wraps header · content · footer (AdminChrome).
+   A flex column at full viewport height so the footer is pushed to the bottom
+   even before content renders (or on the short login screen) — otherwise the
+   header + footer stack together at the top with empty space below. The content
+   region grows to fill the gap. The fixed-sidebar selectors still match since
+   everything stays a descendant of <body>.
+   ========================================================================== */
+.ll-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+.ll-shell__main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
 
 /* =============================================================================
    Global admin top bar (.ll-topbar) — rendered by AdminChrome
@@ -183,9 +215,15 @@ select:focus-visible {
   justify-content: space-between;
   gap: var(--sp-lg);
   height: 64px;
-  padding: 0 32px;
+  /* match the content gutter so the wordmark lines up with page titles/fields */
+  padding: 0 var(--gutter-h);
   background: var(--theme-bg);
   border-bottom: 1px solid var(--theme-border-color);
+  /* pinned to the top so brand · theme toggle · account stay reachable while
+     scrolling; sticky (not fixed) keeps it in flow so no content is offset. */
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 30;
 }
 .ll-topbar__brand {
   display: inline-flex;
@@ -243,18 +281,86 @@ html[data-theme='dark'] .ll-topbar__theme button.on {
   background: var(--acc-soft);
 }
 
-/* user chip — initials avatar + admin name, links to the account view */
+/* user chip — initials avatar + admin name; a button that opens the account
+   dropdown (Account · Log out). */
+.ll-topbar__user {
+  position: relative;
+}
 .ll-topbar__userchip {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 3px 10px 3px 4px;
+  padding: 3px 12px 3px 4px;
+  border: 0;
   border-radius: var(--r-full);
+  background: transparent;
   text-decoration: none;
+  cursor: pointer;
   transition: background 0.12s ease;
 }
-.ll-topbar__userchip:hover {
+.ll-topbar__userchip:hover,
+.ll-topbar__userchip[aria-expanded='true'] {
   background: var(--theme-elevation-50);
+}
+.ll-topbar__caret {
+  color: var(--theme-elevation-400, #8c8f92);
+  transition: transform 0.18s ease;
+}
+.ll-topbar__userchip[aria-expanded='true'] .ll-topbar__caret {
+  transform: rotate(180deg);
+}
+
+/* account dropdown */
+.ll-topbar__menu {
+  position: absolute;
+  inset-block-start: calc(100% + 8px);
+  inset-inline-end: 0;
+  z-index: 40;
+  min-width: 184px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--theme-elevation-100);
+  border: 1px solid var(--theme-border-color);
+  border-radius: var(--r-lg);
+  box-shadow: 0 12px 32px rgba(13, 10, 18, 0.18);
+}
+.ll-topbar__menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--theme-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+}
+.ll-topbar__menu-item svg {
+  flex: 0 0 16px;
+  color: var(--theme-elevation-400, #8c8f92);
+  transition: color 0.12s ease;
+}
+.ll-topbar__menu-item:hover {
+  background: var(--theme-elevation-50);
+  color: var(--acc-soft);
+}
+.ll-topbar__menu-item:hover svg {
+  color: var(--acc-soft);
+}
+.ll-topbar__menu-item:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: -2px;
 }
 .ll-topbar__avatar {
   display: grid;
@@ -284,6 +390,64 @@ html[data-theme='dark'] .ll-topbar__theme button.on {
 }
 
 /* =============================================================================
+   User / account edit — merge the auth block (Email + Password) and the custom
+   fields (Name) into ONE panel, with Name as the first element. Payload renders
+   `.auth-fields` (its own elevated box) as a sibling BEFORE the regular fields,
+   which left Name floating below on the page bg. We lift the panel up to the
+   shared `.document-fields__edit` column, flatten the inner auth box, and use
+   flex order to surface Name first. Scoped via :has(.auth-fields) so it only
+   touches auth-collection edit/account views (not Blogs, Globals, etc.).
+   ========================================================================== */
+/* `.document-fields__edit` is Payload's Gutter (load-bearing padding/border) —
+   we DON'T touch its box model. We only flex it so `order` works, then make the
+   two child boxes (custom fields + auth) read as one joined card, Name on top. */
+.document-fields__edit:has(.auth-fields) {
+  display: flex;
+  flex-direction: column;
+}
+/* Name (and any other custom fields) sit first, in the top half of the card.
+   No bottom padding here — the junction spacing comes from the auth block's
+   padding-top below, so Name→Email matches the normal inter-field gap. */
+.document-fields__edit:has(.auth-fields) > .render-fields {
+  order: 1;
+  padding: calc(var(--base) * 2) calc(var(--base) * 2) 0;
+  background: var(--theme-elevation-50);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+/* auth block (Email + Password) sits below, sharing the same surface. Its
+   padding-top is reduced to one field gap so the seam reads as a normal field
+   spacing rather than a double-padded gap. */
+.document-fields__edit:has(.auth-fields) > .auth-fields {
+  order: 2;
+  padding-top: var(--spacing-field, var(--base));
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+}
+
+/* =============================================================================
+   Success toast — retinted from Payload's default green to the brand TEAL
+   (--teal #3da1a5, the colour of "Labs" in the logo). We redefine the
+   `--theme-success-*` tokens scoped to the success toast only, so the box AND
+   the checkmark icon (its SVG reads --theme-success-500/50) pick up the teal
+   automatically. State stays signalled by the check icon + text, not colour
+   alone (§10). Other toasts (error/warning/info) untouched.
+   ========================================================================== */
+.payload-toast-container .payload-toast-item.toast-success {
+  --theme-success-800: #246b6e; /* title text — deep teal, AA on the tint */
+  --theme-success-600: var(--teal); /* close button */
+  --theme-success-500: var(--teal); /* icon disc fill */
+  --theme-success-250: color-mix(in srgb, var(--teal) 40%, transparent); /* border */
+  --theme-success-100: color-mix(in srgb, var(--teal) 12%, var(--theme-input-bg)); /* bg */
+  --theme-success-50: #ffffff; /* check mark stroke (reads on the teal disc) */
+}
+html[data-theme='dark'] .payload-toast-container .payload-toast-item.toast-success {
+  --theme-success-800: #6fd3d6; /* brighter title on plum-dark */
+  --theme-success-600: #5cc2c5;
+  --theme-success-500: #5cc2c5; /* lift the disc for contrast on dark */
+  --theme-success-250: color-mix(in srgb, #5cc2c5 45%, transparent);
+  --theme-success-100: color-mix(in srgb, var(--teal) 22%, var(--theme-input-bg));
+}
+
+/* =============================================================================
    Global admin footer (.ll-appfooter) — rendered by AdminChrome.
    Ultra-minimal: copyright line + mono build tag. It scrolls with the page;
    its height equals the sidebar's logout block (--ll-foot-h) so that, at the
@@ -296,7 +460,8 @@ html[data-theme='dark'] .ll-topbar__theme button.on {
   gap: var(--sp-lg);
   flex-wrap: wrap;
   min-height: var(--ll-foot-h);
-  padding: 0 32px;
+  /* same content gutter as the topbar + page content for vertical alignment */
+  padding: 0 var(--gutter-h);
   background: var(--theme-bg);
   border-top: 1px solid var(--theme-border-color);
 }
@@ -312,11 +477,9 @@ html[data-theme='dark'] .ll-topbar__theme button.on {
   color: var(--theme-elevation-400, #8c8f92);
 }
 @media (max-width: 720px) {
-  .ll-topbar {
-    padding: 0 20px;
-  }
+  /* keep both bars on the content gutter (var(--gutter-h) drops to 16px here) */
   .ll-appfooter {
-    padding: 18px 20px;
+    padding-block: 18px;
   }
 }
 
@@ -331,10 +494,6 @@ html[data-theme='dark'] .ll-topbar__theme button.on {
   --color: #ffffff;
   --hover-bg: var(--acc-soft);
   --hover-color: #ffffff;
-  min-height: 44px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
 }
 .btn--style-primary:active {
   --bg-color: var(--acc-deep);
@@ -626,7 +785,7 @@ a:not(.btn):not(.ll-topbar__userchip):not(.nav__link):hover {
   text-align: left;
   font-family: var(--font-body);
   font-weight: 800;
-  font-size: 15px; /* px — Payload's root is 13px, so rem reads smaller */
+  font-size: 13.5px; /* px — Payload's root is 13px, so rem reads smaller */
   letter-spacing: 0.01em;
   color: var(--theme-text);
   padding: 18px 22px;
@@ -638,16 +797,17 @@ a:not(.btn):not(.ll-topbar__userchip):not(.nav__link):hover {
   padding: 18px 22px;
   border-bottom: 1px solid var(--theme-border-color);
   color: var(--theme-elevation-450, #51565d);
-  font-size: 15px;
+  /* data slightly smaller than the header (which stays 15px) */
+  font-size: 13.5px;
   vertical-align: middle;
 }
-/* cell links/inner text inherit the larger cell font (Payload sets it on the
+/* cell links/inner text inherit the smaller cell font (Payload sets it on the
    inner elements, so target them explicitly) */
 .table tbody td a,
 .table tbody td span,
 .table tbody td .cell-data,
 .table tbody td button {
-  font-size: 15px;
+  font-size: 13.5px;
 }
 .table tbody tr:last-child td {
   border-bottom: 0;
@@ -748,25 +908,46 @@ a:not(.btn):not(.ll-topbar__userchip):not(.nav__link):hover {
   --bg-color: transparent;
   border: 0;
   color: #ffffff !important;
-  box-shadow: 0 8px 22px var(--glow);
+  box-shadow: none;
   transition:
     transform 0.18s ease,
-    box-shadow 0.18s ease,
     filter 0.18s ease;
 }
-/* "Create New" (and other small list pills) → same height as the medium "Save"
-   button: give them the medium vertical padding (Payload's small size uses 0). */
+/* Uniform button height across Payload — match the adjacent icon button
+   (.doc-controls__dots is var(--base)*1.6 tall + 1px border each side, content-box).
+   We use border-box so the height includes our border and content centres.
+   !important + min-height:0 + a tight line-height keep the inner label/content
+   from forcing the box taller than the target. */
 .list-create-new-doc__create-new-button,
 .list-header__title-actions .btn--size-small,
-.list-controls .btn--size-small {
-  --btn-padding-block-start: calc(var(--base) * 0.2);
-  --btn-padding-block-end: calc(var(--base) * 0.2);
-  padding-block: calc(var(--base) * 0.2);
+.list-controls .btn--size-small,
+.btn--style-primary,
+.btn--style-secondary {
+  box-sizing: border-box !important;
+  height: calc(var(--base) * 1.6 + 2px) !important;
+  min-height: 0 !important;
+  padding-block: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  --btn-line-height: 1;
+  /* unify the typography of Save / Create New (and the small list buttons):
+     same size + weight, Title Case (first letter of each word capital). */
+  font-size: var(--base-body-size);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: capitalize;
+}
+/* keep the label/content from imposing its own height inside the fixed box */
+.btn--style-primary .btn__content,
+.btn--style-secondary .btn__content,
+.list-create-new-doc__create-new-button .btn__content {
+  height: auto;
+  line-height: 1;
 }
 .list-create-new-doc__create-new-button:hover,
 .btn--style-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px var(--glow);
   filter: brightness(1.05);
 }
 /* Disabled state (e.g. "Save" with no unsaved changes) — muted, no gradient or
@@ -788,14 +969,52 @@ a:not(.btn):not(.ll-topbar__userchip):not(.nav__link):hover {
   filter: none;
 }
 
+/* Submitting state — Payload only *disables* the submit button while a request
+   is in flight (no spinner) and reuses the same disabled flag for the idle
+   "nothing to save" state. We tell them apart via the form's
+   data-form-ready="false" (set only while processing/initialising): keep the
+   accent fill (so it reads as "working", not "inactive"), hide the label, and
+   spin a ring until the response lands. Covers Save, Login, Forgot-password —
+   every FormSubmit primary. */
+form[data-form-ready='false'] .btn--style-primary {
+  background: var(--acc) !important;
+  color: #ffffff !important; /* keep the label visible on the accent fill */
+  cursor: progress;
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+/* spinner lives inside .btn__content (the label's centred flex row), so it sits
+   right beside the word — using the button's own icon/content gap. */
+form[data-form-ready='false'] .btn--style-primary .btn__content::after {
+  content: '';
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  margin-inline-start: 0.5em; /* a little breathing room from the label */
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: ll-btn-spin 0.6s linear infinite;
+}
+@keyframes ll-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* keep the ring as a static indicator rather than animating it (§9/§10) */
+  form[data-form-ready='false'] .btn--style-primary .btn__content::after {
+    animation: none;
+  }
+}
+
 /* =============================================================================
    Globals (Pages + Layout): drop the Edit/API doc-tabs and lift "Save" up into
    the title row where they were. Scoped to global edit views (their form carries
    a `global-edit--<slug>` class) so collection edit views are untouched.
+   (The Edit/API tabs themselves are hidden globally via .doc-tabs below.)
    ========================================================================== */
-.template-default__wrap:has([class*='global-edit--']) .doc-tabs {
-  display: none;
-}
 .template-default__wrap:has([class*='global-edit--']) .doc-controls {
   position: static;
   margin-top: -70px; /* lift onto the title row, centred with the title */
@@ -818,6 +1037,14 @@ a:not(.btn):not(.ll-topbar__userchip):not(.nav__link):hover {
 .template-default__wrap:has([class*='global-edit--']) .doc-controls__controls-wrapper,
 .template-default__wrap:has([class*='global-edit--']) .doc-controls__controls {
   pointer-events: auto;
+}
+
+/* Collections: drop the Edit / API tabs on the document detail (edit) view too.
+   The tabs live in .doc-header (the title row), NOT inside .collection-edit, so
+   we target .doc-tabs directly — this covers collection document views (globals
+   are already handled above). Only affects document views; lists have no doc-tabs. */
+.doc-tabs {
+  display: none;
 }
 
 /* =============================================================================
@@ -882,10 +1109,11 @@ html[data-theme='dark'] .nav__link:has(.nav__link-indicator)::before {
    Bespoke Dashboard view (.ll-dash) — adapts to both polarities. Flat + clean.
    ========================================================================== */
 .ll-dash {
-  max-width: 1180px;
-  margin: 0 auto;
+  /* match Payload's other views: full width with the standard gutter, no 1180
+     cap, so the dashboard container lines up with the list/edit pages */
+  width: 100%;
   /* tight top gap — title sits just under the breadcrumb bar (eyebrow removed) */
-  padding: 0.5rem clamp(1rem, 4vw, 2.5rem) var(--sp-section);
+  padding: 0.5rem var(--gutter-h) var(--spacing-view-bottom, var(--sp-section));
   font-family: var(--font-body);
   color: var(--theme-text);
 }

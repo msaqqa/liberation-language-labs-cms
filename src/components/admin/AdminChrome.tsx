@@ -12,11 +12,11 @@ import { AdminHeader } from './AdminHeader'
  * correct across login/logout without threading the server `user` prop here.
  */
 export const AdminChrome = ({ children }: { children?: ReactNode }) => (
-  <>
+  <div className="ll-shell">
     <AdminHeader />
-    {children}
+    <div className="ll-shell__main">{children}</div>
     <AdminFooter />
-  </>
+  </div>
 )
 
 export default AdminChrome

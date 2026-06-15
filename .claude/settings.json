@@ -4,7 +4,21 @@
       "Bash(node -e ' *)",
       "Bash(grep -oE \"^[^{]{1,60}\")",
       "Bash(grep -oE \"^[^{]{1,40}\")",
-      "Bash(powershell -NoProfile -Command \"\\(Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Measure-Object\\).Count\")"
+      "Bash(powershell -NoProfile -Command \"\\(Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Measure-Object\\).Count\")",
+      "Bash(ls -d node_modules/.pnpm/nodemailer@7.0.12/node_modules/nodemailer)",
+      "Bash(node --input-type=module -e \"import\\('./node_modules/.pnpm/nodemailer@7.0.12/node_modules/nodemailer/lib/nodemailer.js'\\).then\\(\\(\\)=>console.log\\('import ok'\\)\\).catch\\(e=>console.log\\('ERR',e.message\\)\\)\")",
+      "Bash(node --env-file=.env scripts/_test-mail.mjs)",
+      "Bash(cp .env .env.bak.mailfix)",
+      "Bash(sed -i 's/^SMTP_PORT=465.*/SMTP_PORT=587/; s/^SMTP_SECURE=true.*/SMTP_SECURE=false/' .env)",
+      "Bash(TEST_FROM='Resend <onboarding@resend.dev>' node --input-type=module --env-file=.env -e ' *)",
+      "Bash(TEST_FROM='Liberation Language Labs <info@liberationlanguagelabs.org>' node --input-type=module --env-file=.env -e ' *)",
+      "Bash(node --input-type=module --env-file=.env -e ' *)",
+      "Bash(grep -roE 'baseClass = ['\\\\''\"][^'\\\\''\"]*['\\\\''\"]' __TRACKED_VAR__/elements/DocumentHeader/Tabs/index.js __TRACKED_VAR__/elements/DocumentHeader/index.js)",
+      "Bash(grep -oE '\\\\.doc-tab[a-z-]*' __TRACKED_VAR__/styles.css)",
+      "Bash(grep -oE 'baseClass = ['\\\\''\"][^'\\\\''\"]*['\\\\''\"]|className: *[`'\\\\''\"][^`'\\\\''\"{]*' __TRACKED_VAR__/elements/DocumentHeader/index.js)",
+      "Bash(ls -la scripts/)",
+      "Bash(ls -la .env.bak* /tmp/_cc.css)",
+      "Bash(git --no-pager diff src/app/\\\\\\(payload\\\\\\)/layout.tsx)"
     ]
   }
 }
