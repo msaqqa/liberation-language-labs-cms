@@ -24,6 +24,19 @@ if (process.env.NODE_ENV !== 'production') {
   csrfOrigins.push('http://localhost:3000')
 }
 
+// Vercel deployments (preview + branch + production) are served from URLs that
+// differ from SERVER_URL. Cookie-authenticated mutations (e.g. logout) are
+// CSRF-checked against this list, so without the current host here the logout
+// POST is rejected — the client clears its state but the server cookie stays,
+// leaving you "logged out" yet bounced back on reload. Add Vercel's own URLs.
+for (const host of [
+  process.env.VERCEL_PROJECT_PRODUCTION_URL,
+  process.env.VERCEL_BRANCH_URL,
+  process.env.VERCEL_URL,
+]) {
+  if (host) csrfOrigins.push(`https://${host}`)
+}
+
 const defaultFromAddress = process.env.EMAIL_FROM_ADDRESS || 'no-reply@liberationlabs.local'
 const defaultFromName = process.env.EMAIL_FROM_NAME || 'Liberation Language Labs'
 
