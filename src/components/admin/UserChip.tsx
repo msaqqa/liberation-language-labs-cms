@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useAuth, useConfig } from '@payloadcms/ui'
 import { useEffect, useRef, useState } from 'react'
 
@@ -10,7 +9,7 @@ import { useEffect, useRef, useState } from 'react'
  * Reads the live auth state via useAuth() so it stays in sync with login/logout
  * (a server-rendered prop would go stale on client nav). Renders nothing when
  * signed out. The menu holds Account + Log out; logOut() clears auth state and
- * hits the logout endpoint but doesn't redirect, so we push to /login after.
+ * hits the logout endpoint but doesn't redirect, so we hard-redirect to /login after.
  */
 const initialsFrom = (email: string): string => {
   const local = email.split('@')[0] || email
@@ -39,7 +38,6 @@ const nameFrom = (email: string): string => {
 export const UserChip = () => {
   const { user, logOut } = useAuth()
   const { config } = useConfig()
-  const router = useRouter()
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
 
@@ -74,7 +72,11 @@ export const UserChip = () => {
   const handleLogout = async () => {
     setOpen(false)
     await logOut()
-    router.push(`${adminRoute}/login`)
+    // Hard navigation (not router.push): in production Next caches the RSC/router
+    // payload, so a soft nav to /login re-renders the still-cached authed page and
+    // bounces back. A full reload forces the server to re-evaluate the cleared
+    // cookie and render the login screen. replace() keeps the authed page out of history.
+    window.location.replace(`${adminRoute}/login`)
   }
 
   return (
