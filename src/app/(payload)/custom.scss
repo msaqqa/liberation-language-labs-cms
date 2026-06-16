@@ -69,6 +69,7 @@
 
   /* shell */
   --nav-width: 264px;
+  --nav-rail: 72px; /* collapsed sidebar = icon-only rail */
   /* shared height of the sidebar logout block and the content footer, so their
      top borders line up at the bottom of the page. Set to match the 64px topbar
      height so the footer mirrors the header (the sidebar footer follows along,
@@ -536,9 +537,17 @@ a:not(.btn):not(.ll-topbar__userchip):not(.nav__link):hover {
 .nav__controls > :first-child {
   margin-top: 0;
 }
-/* drop the sidebar's bottom padding so the logout block sits flush at the very
-   bottom — its top divider then lines up with the footer's top border */
+/* The sidebar's brand/toggle zone matches the 64px top bar, and the nav content
+   starts level with the breadcrumb (step-nav) row — so the toggle sits parallel
+   to the header and the first nav item parallel to the breadcrumb. */
+.nav__header {
+  height: 64px;
+}
 .nav__scroll {
+  /* push the first item down to the breadcrumb line: 64px top bar + the vertical
+     centre of the breadcrumb band, minus half a row so it aligns optically */
+  padding-block-start: calc(64px + var(--app-header-height) / 2 - var(--base) / 2);
+  /* drop the bottom padding so the logout block sits flush at the very bottom */
   padding-block-end: 0;
 }
 
@@ -693,31 +702,126 @@ a:not(.btn):not(.ll-topbar__userchip):not(.nav__link):hover {
     inset-block-start: 0;
     inset-inline-start: 0;
     width: var(--nav-width);
-    height: var(--app-header-height);
+    height: 64px; /* match the top bar so the toggle aligns with "Dashboard" */
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding-inline-end: 14px;
+    justify-content: space-between; /* wordmark left · toggle right */
+    /* left padding = group-label start (nav__scroll's --base inline padding +
+       the label's 0.7rem indent) so "Menu" lines up with PAGES/LAYOUT */
+    padding-inline: calc(var(--base) + 0.7rem) 14px;
     z-index: 30;
     pointer-events: none;
   }
-  /* when the sidebar is COLLAPSED, move the toggle into the top bar at the far
-     left, next to the logo (so the sidebar can be reopened from there) */
+  /* "MENU" wordmark beside the toggle so the header band isn't empty (open only) */
+  body:has(.template-default--nav-open) .template-default__nav-toggler-wrapper::before {
+    content: 'Menu';
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--label);
+  }
+  /* ---------------------------------------------------------------------------
+     COLLAPSED = icon rail. Instead of hiding the sidebar, keep a narrow bar
+     showing only the icons (labels appear as hover tooltips). Per the design.
+     --------------------------------------------------------------------------- */
+  body:has(.template-default:not(.template-default--nav-open)) .nav {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    height: 100vh;
+    width: var(--nav-rail);
+    z-index: 20;
+    transform: none !important; /* cancel Payload's slide-away */
+    /* Payload sets .nav { opacity:0 } and only .nav--nav-open restores it, so the
+       collapsed rail would be invisible — force it visible. */
+    opacity: 1 !important;
+    overflow: visible; /* let hover tooltips escape the rail */
+  }
+  /* drop the big horizontal gutter so icons sit centered; keep tooltips unclipped
+     by making the whole nav chain overflow-visible. The first item here is the
+     42px icon box (labels hidden), so center that box on the breadcrumb row
+     (less top padding than the label-based value used when expanded). */
+  body:has(.template-default:not(.template-default--nav-open)) .nav__scroll {
+    overflow: visible;
+    padding-inline: 0;
+    padding-block-start: calc(64px + var(--app-header-height) / 2 - 21px);
+  }
+  body:has(.template-default:not(.template-default--nav-open)) .nav__wrap {
+    align-items: stretch; /* links span the rail so their icons truly center */
+    overflow: visible;
+  }
+  body:has(.template-default:not(.template-default--nav-open)) .nav-group,
+  body:has(.template-default:not(.template-default--nav-open)) .nav-group__content {
+    overflow: visible;
+  }
+  /* offset content/chrome by the rail width (not 0) */
+  body:has(.template-default:not(.template-default--nav-open)) .template-default {
+    grid-template-columns: 1fr;
+  }
+  body:has(.template-default:not(.template-default--nav-open)) .template-default__wrap {
+    padding-inline-start: var(--nav-rail);
+  }
+  body:has(.template-default:not(.template-default--nav-open)) .ll-topbar,
+  body:has(.template-default:not(.template-default--nav-open)) .ll-appfooter {
+    margin-inline-start: var(--nav-rail);
+  }
+  /* hide group/brand/logout text; center the icons */
+  body:has(.template-default:not(.template-default--nav-open)) .nav__label,
+  body:has(.template-default:not(.template-default--nav-open)) .nav-group__toggle,
+  body:has(.template-default:not(.template-default--nav-open)) .nav__header-content,
+  body:has(.template-default:not(.template-default--nav-open)) .nav__log-out::after {
+    display: none;
+  }
+  /* hide the text (a native title attribute carries it — set in NavStatePersist) */
+  body:has(.template-default:not(.template-default--nav-open)) .nav__link-label {
+    display: none;
+  }
+  /* compact, centered square hit-area around the icon (not the full rail width) */
+  body:has(.template-default:not(.template-default--nav-open)) .nav__link {
+    width: 42px;
+    height: 42px;
+    margin-inline: auto;
+    padding: 0;
+    justify-content: center;
+    border-radius: var(--r-md);
+  }
+  /* drop the icon→label gap so the icon is truly centered */
+  body:has(.template-default:not(.template-default--nav-open)) .nav__link::before {
+    margin-inline-end: 0;
+  }
+  /* hover/focus affordance sits only on the small square around the icon */
+  body:has(.template-default:not(.template-default--nav-open)) .nav__link[href]:hover {
+    background: color-mix(in srgb, var(--ll-nav-soft) 70%, transparent);
+  }
+  body:has(.template-default:not(.template-default--nav-open)) .nav__log-out {
+    width: 42px;
+    height: 42px;
+    margin-inline: auto;
+    padding: 0;
+    justify-content: center;
+    border-radius: var(--r-md);
+  }
+  /* the logout block's full-width divider uses negative margins sized for the
+     open sidebar; in the rail they overshoot, so reset them to fit the rail */
+  body:has(.template-default:not(.template-default--nav-open)) .nav__controls {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+  /* collapse toggle pinned to the rail top, centered (it re-expands the sidebar) */
   body:has(.template-default:not(.template-default--nav-open)) .template-default__nav-toggler-wrapper {
     position: fixed;
     inset-block-start: 0;
     inset-inline-start: 0;
-    width: auto;
+    width: var(--nav-rail);
     height: 64px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding-inline-start: 20px;
+    justify-content: center;
+    padding: 0;
     z-index: 40;
     pointer-events: none;
-  }
-  body:has(.template-default:not(.template-default--nav-open)) .ll-topbar {
-    padding-inline-start: 64px; /* room for the toggle beside the logo */
   }
   .template-default__nav-toggler-container {
     pointer-events: auto;

@@ -23,7 +23,8 @@
       "Bash(git --no-pager log --oneline -3 origin/ui-ai)",
       "Bash(git --no-pager log --oneline origin/ui-ai..HEAD)",
       "Bash(git commit --allow-empty -m 'chore: re-trigger vercel deploy *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(grep -nE 'beforeNavLinks|NavProvider|NavWrapper|RenderServerComponent|NavClient|NavHamburger|'\\\\''use client'\\\\''' __TRACKED_VAR__/elements/Nav/index.js)"
     ]
   }
 }
