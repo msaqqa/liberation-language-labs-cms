@@ -24,11 +24,22 @@ if (process.env.NODE_ENV !== 'production') {
   csrfOrigins.push('http://localhost:3000')
 }
 
-// Vercel deployments (preview + branch + production) are served from URLs that
-// differ from SERVER_URL. Cookie-authenticated mutations (e.g. logout) are
-// CSRF-checked against this list, so without the current host here the logout
-// POST is rejected — the client clears its state but the server cookie stays,
-// leaving you "logged out" yet bounced back on reload. Add Vercel's own URLs.
+// Cookie-authenticated requests (e.g. logout) are CSRF-checked: Payload only
+// honours the auth cookie when the request's Origin is in this list — otherwise
+// it ignores the cookie and the op fails with "No User" (400). Vercel serves
+// each deployment from a URL that differs from SERVER_URL, so the current host
+// must be added or logout silently fails (client clears state, server cookie
+// stays, reload bounces back).
+//
+// 1) Manual override — set CSRF_ORIGINS in Vercel to a comma-separated list of
+//    exact origins (e.g. "https://app.example.com,https://foo-git-x.vercel.app").
+//    Guaranteed to work regardless of which system env vars are exposed.
+for (const origin of (process.env.CSRF_ORIGINS || '').split(',')) {
+  const trimmed = origin.trim()
+  if (trimmed) csrfOrigins.push(trimmed)
+}
+// 2) Auto-detect Vercel's own URLs (requires "Automatically expose System
+//    Environment Variables" to be enabled for the project).
 for (const host of [
   process.env.VERCEL_PROJECT_PRODUCTION_URL,
   process.env.VERCEL_BRANCH_URL,
@@ -97,6 +108,9 @@ export default buildConfig({
       // avatar; the footer is the minimalist copyright + build tag. custom.scss
       // offsets both to start after the full-height sidebar on app pages.
       providers: ['/components/admin/AdminChrome#AdminChrome'],
+      // Persists the desktop sidebar open/closed state in localStorage and
+      // defaults it to open (rendered inside the Nav so it can use useNav).
+      beforeNavLinks: ['/components/admin/NavStatePersist#NavStatePersist'],
       views: {
         // Bespoke HUD dashboard replacing Payload's default view
         dashboard: {

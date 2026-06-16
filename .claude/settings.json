@@ -18,7 +18,12 @@
       "Bash(grep -oE 'baseClass = ['\\\\''\"][^'\\\\''\"]*['\\\\''\"]|className: *[`'\\\\''\"][^`'\\\\''\"{]*' __TRACKED_VAR__/elements/DocumentHeader/index.js)",
       "Bash(ls -la scripts/)",
       "Bash(ls -la .env.bak* /tmp/_cc.css)",
-      "Bash(git --no-pager diff src/app/\\\\\\(payload\\\\\\)/layout.tsx)"
+      "Bash(git --no-pager diff src/app/\\\\\\(payload\\\\\\)/layout.tsx)",
+      "Bash(git --no-pager log --oneline -5)",
+      "Bash(git --no-pager log --oneline -3 origin/ui-ai)",
+      "Bash(git --no-pager log --oneline origin/ui-ai..HEAD)",
+      "Bash(git commit --allow-empty -m 'chore: re-trigger vercel deploy *)",
+      "Bash(git push *)"
     ]
   }
 }
